@@ -1,175 +1,139 @@
-# Figma-to-Dashboard Classification Pipeline — Execution Steps
+VISTA POC DASHBOARD GENERATOR STARTUP GUIDE FOR A NEW TEAM MEMBER
+===================================
 
-**Project directory:** `C:\major_project`
+PURPOSE
 
-## Step 1: Open the project folder
-Open PowerShell and run:
+This guide explains how to start the Figma-to-Vista Dashboard Generator
+locally. You must keep THREE terminal windows running at the same time.
 
-```powershell
-cd C:\major_project
-```
+Before starting: - Make sure the project is available at: C:_proj - Make
+sure Node.js/npm and Python are installed. - Open the project folder in
+your code editor or File Explorer if needed. - Do not close any of the
+three terminals while using the application.
 
-## Step 2: Start the Figma plugin receiver
-Open a **separate PowerShell terminal** and run:
+PART 1 — START THE FIGMA PLUGIN RECEIVER
 
-```powershell
-cd C:\major_project
-python plugin_receiver.py
-```
+1.  Open Windows PowerShell.
 
-Keep this terminal running while sending the Figma design data.
+2.  Run:
 
-*Note: If your receiver script is located elsewhere, use its actual path.*
+    cd C:_proj python plugin_receiver.py
 
-## Step 3: Send the Figma design
-1. Open the Figma design you want to classify.
-2. Run your Figma plugin.
-3. Send/export the design data through the plugin.
-4. Verify that the received data is saved to:
+3.  Wait until you see:
 
-```text
-dataset\new_dashboard\figma_data.json
-```
+    Waiting for Figma plugin at http://127.0.0.1:8765
 
-Make sure the file contains the **new design**, not an older dashboard's data.
+4.  Leave this terminal open and running.
 
-## Step 4: Generate component candidates
-In the main PowerShell terminal, run:
+5.  Do not press Ctrl+C in this terminal.
 
-```powershell
-python src\preprocessing\generate_new_candidates.py
-```
+This process receives data sent by the Figma plugin.
 
-Output:
+PART 2 — START THE BACKEND SERVER
 
-```text
-dataset\new_candidates\new_dashboard_candidates.json
-```
+1.  Open a SECOND Windows PowerShell terminal. Do not reuse or close the
+    first terminal.
 
-## Step 5: Run the trained XGBoost model
-Run:
+2.  Run:
 
-```powershell
-python src\model\predict.py
-```
+    cd C:_proj python server.py
 
-Output:
+3.  Wait until you see messages similar to:
 
-```text
-dataset\new_candidates\new_dashboard_predictions.json
-```
+    Starting Vista POC Dashboard Generator server on
+    http://127.0.0.1:8000 Application startup complete. Uvicorn running
+    on http://0.0.0.0:8000
 
-## Step 6: Clean the predictions
-Run:
+4.  Leave this terminal open and running.
 
-```powershell
-python src\output\clean_predictions.py
-```
+5.  Do not press Ctrl+C in this terminal.
 
-Output:
+This process runs the backend/API that handles the dashboard-generation
+workflow.
 
-```text
-dataset\new_candidates\new_dashboard_clean_predictions.json
-```
+PART 3 — START THE FRONTEND
 
-## Step 7: Validate the final JSON
-Run:
+1.  Open a THIRD Windows PowerShell terminal.
 
-```powershell
-python -c "import json; p='dataset/new_candidates/new_dashboard_clean_predictions.json'; d=json.load(open(p,encoding='utf-8')); items=d.get('predictions',[]); print('Valid JSON: Yes'); print('Dashboard:',d.get('dashboard')); print('Components:',len(items)); print('Classes:',{k:sum(x.get('predicted_type')==k for x in items) for k in sorted(set(x.get('predicted_type','OTHER') for x in items))}); print('Missing IDs:',sum(not x.get('candidate_id') for x in items)); print('Missing classes:',sum(not x.get('predicted_type') for x in items))"
-```
+2.  Run:
 
-Check that the JSON is valid, components are present, and IDs and classifications are not missing.
+    cd C:_proj npm run dev
 
-## Step 8: Review the classified components
-Open the final output:
+3.  Wait until Vite displays a local address similar to:
 
-```powershell
-code dataset\new_candidates\new_dashboard_clean_predictions.json
-```
+    VITE ready Local: http://localhost:5174/
 
-Review the component names, text, and `predicted_type` values. Check for incorrect classifications and duplicate or nested components.
+    NOTE: The port may differ if 5174 is already in use. Always use the
+    exact Local URL printed in your terminal.
 
-## Final output
+4.  Open the Local URL in your browser. Example: http://localhost:5174/
 
-Your final classified dashboard JSON is:
+5.  Leave this terminal open and running.
 
-```text
-dataset\new_candidates\new_dashboard_clean_predictions.json
-```
+6.  Do not press Ctrl+C in this terminal.
 
-The classification labels currently include `CHART`, `KPI_CARD`, and `OTHER`.
+This process serves the user interface in the browser.
 
-**Important:** This pipeline uses the already-trained XGBoost model. You do not need to retrain it every time you process a new Figma design. Retrain only when you intentionally update the training data or model.
+PART 4 — CHECK THAT ALL THREE PROCESSES ARE RUNNING
 
-**Execution order:** Receiver → Figma plugin → Generate candidates → Predict → Clean predictions → Validate JSON → Review results.
+Before using the application, confirm:
 
+Terminal 1 — Plugin Receiver Expected: Waiting for Figma plugin at
+http://127.0.0.1:8765
 
+Terminal 2 — Backend Expected: Application startup complete and Uvicorn
+running on port 8000.
 
+Terminal 3 — Frontend Expected: Vite ready and a Local URL, for example
+http://localhost:5174/
 
+All three terminals must remain open simultaneously.
 
-1. **Generate candidates and predictions:**
-```powershell
-python src\preprocessing\generate_new_candidates.py
-python src\model\predict.py
-python src\output\clean_predictions.py
-```
-2. **Generate the dashboard files:**
-```powershell
-python src\output\generate_grid_layout.py
-python src\output\generate_vista_page.py
-```
-3. **Start the preview server and open the dashboard:**
-```powershell
-python -m http.server 8000
-```
-Open `http://localhost:8000/dashboard_preview.html` and press **Ctrl + F5** to refresh.
+PART 5 — USE THE APPLICATION
 
+1.  Keep all three terminals running.
+2.  Open the frontend Local URL in your browser.
+3.  Open the relevant Figma file and launch the Figma plugin.
+4.  Follow the plugin’s on-screen instructions to send the selected
+    Figma design to the local receiver.
+5.  Wait for the processing workflow to finish.
+6.  Check the browser for the generated Vista dashboard.
+7.  If the dashboard does not appear, check the terminal windows for
+    errors.
 
-http://localhost:8000/dashboard_preview.html
+IMPORTANT
 
+-   Start each process in its own terminal window.
+-   Do not run all three commands in the same terminal.
+-   Do not close a terminal while using the application.
+-   Do not press Ctrl+C unless you intend to stop that process.
+-   If a process stops or a terminal is closed, restart that process
+    using the corresponding steps above.
+-   Use the exact frontend Local URL printed by Vite. Do not assume the
+    port will always be 5174.
+-   If a port is already occupied, do not randomly change project
+    settings. Read the terminal error/output first.
 
+QUICK START CHECKLIST
 
+[ ] Terminal 1: cd C:_proj [ ] Terminal 1: python plugin_receiver.py [ ]
+Terminal 1 shows: Waiting for Figma plugin at http://127.0.0.1:8765
 
+[ ] Terminal 2: cd C:_proj [ ] Terminal 2: python server.py [ ] Terminal
+2 shows: Application startup complete / Uvicorn running
 
+[ ] Terminal 3: cd C:_projTerminal 3: npm run dev [ ] Terminal 3 shows:
+Vite ready and a Local URL
 
+[ ] Open the frontend Local URL in the browser [ ] Launch the Figma
+plugin and send the design [ ] Wait for the generated dashboard
 
+SHUTDOWN PROCEDURE
 
+When finished: 1. Go to Terminal 3 and press Ctrl+C to stop the
+frontend. 2. Go to Terminal 2 and press Ctrl+C to stop the backend. 3.
+Go to Terminal 1 and press Ctrl+C to stop the plugin receiver. 4. Close
+the terminal windows if you no longer need them.
 
-
-
-
-
-Running the Application
-Terminal 1 - Backend:
-
-powershell
-cd c:\figma_proj
-$env:PORT=8001; python server.py
-Terminal 2 - Frontend:
-
-powershell
-cd c:\figma_proj\frontend
-npm run dev
-Terminal 3 - Plugin Receiver (optional, if using plugin):
-
-powershell
-cd c:\figma_proj
-python plugin_receiver.py
-Access the app at: http://localhost:5174
-
-Workflow
-Send design from Figma plugin (or manually place JSON in dataset/new_dashboard/figma_data.json)
-Click "Load Plugin Data" in frontend
-Click "Normalize" to extract candidates
-Click "Preprocess" to extract features
-Click "Run Model" for XGBoost classification
-Click "Generate Layout" for 12x12 grid and Vista page.json
-Download page.json or view preview
-The 12x12 grid preview is already available in the existing LiveDashboardPreview component which displays the generated Vista page.json.
-
-Feedback submitted
-
-
-
-
+If you are unsure whether a process is still running, check its terminal
+before starting another copy. Avoid launching duplicate servers.

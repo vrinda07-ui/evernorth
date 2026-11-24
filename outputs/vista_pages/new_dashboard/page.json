@@ -1,9 +1,9 @@
 {
-  "contentId": "WYF1Y",
-  "slideId": "WYF1Y",
-  "pageId": "63a953e0-7534-4885-8c45-861f29e98d97",
-  "id": "63a953e0-7534-4885-8c45-861f29e98d97",
-  "title": "Dashboard 18",
+  "contentId": "QGXHL",
+  "slideId": "QGXHL",
+  "pageId": "74678b34-a0e5-4aa9-812a-c67d7de14ea1",
+  "id": "74678b34-a0e5-4aa9-812a-c67d7de14ea1",
+  "title": "Design 09 – Pharmacy Spend",
   "description": " ",
   "subjectArea": "sales",
   "topic": "analytics",
@@ -11,8 +11,8 @@
   "schemaVersion": "1.0",
   "format": "local-dashboard-page",
   "dashboard": {
-    "id": "141:2068",
-    "name": "Dashboard 18",
+    "id": "202:5484",
+    "name": "Design 09 – Pharmacy Spend",
     "columns": 12,
     "rows": 12,
     "sourceWidth": 1440.0,
@@ -20,18 +20,18 @@
   },
   "tiles": [
     {
-      "tileId": "e5e7f316-1d3d-4d9d-93e4-03c6ff718ddd",
-      "id": "e5e7f316-1d3d-4d9d-93e4-03c6ff718ddd",
-      "contentId": "WYF1Y",
-      "slideId": "WYF1Y",
+      "tileId": "40753b92-3d5d-4b1c-ac05-bd3e4538f4fa",
+      "id": "40753b92-3d5d-4b1c-ac05-bd3e4538f4fa",
+      "contentId": "QGXHL",
+      "slideId": "QGXHL",
       "cols": 2,
       "rows": 12,
       "colOffset": 0,
       "rowOffset": 0,
       "widgetIds": [
-        "b854f5d3-7004-4c15-afa7-6cda63b38e9f"
+        "de177c02-3919-4681-8bf8-7ccc7f6ad40c"
       ],
-      "widgetId": "b854f5d3-7004-4c15-afa7-6cda63b38e9f",
+      "widgetId": "de177c02-3919-4681-8bf8-7ccc7f6ad40c",
       "grid": {
         "colOffset": 0,
         "colSpan": 2,
@@ -40,58 +40,138 @@
       }
     },
     {
-      "tileId": "149b5aa1-2aa3-4ab6-a763-6761cb15730f",
-      "id": "149b5aa1-2aa3-4ab6-a763-6761cb15730f",
-      "contentId": "WYF1Y",
-      "slideId": "WYF1Y",
-      "cols": 6,
-      "rows": 2,
+      "tileId": "64562a88-b221-4c81-a349-a6f20dcf4d97",
+      "id": "64562a88-b221-4c81-a349-a6f20dcf4d97",
+      "contentId": "QGXHL",
+      "slideId": "QGXHL",
+      "cols": 11,
+      "rows": 1,
       "colOffset": 1,
-      "rowOffset": 1,
+      "rowOffset": 0,
       "widgetIds": [
-        "2a395caf-6083-4829-af77-c7dc937f7c2f"
+        "eeb7c9d9-15f4-4221-b0f1-baa86e00891b"
       ],
-      "widgetId": "2a395caf-6083-4829-af77-c7dc937f7c2f",
+      "widgetId": "eeb7c9d9-15f4-4221-b0f1-baa86e00891b",
       "grid": {
         "colOffset": 1,
-        "colSpan": 6,
+        "colSpan": 11,
+        "rowOffset": 0,
+        "rowSpan": 1
+      }
+    },
+    {
+      "tileId": "0c29702d-c52e-4801-a18d-37cafcea868e",
+      "id": "0c29702d-c52e-4801-a18d-37cafcea868e",
+      "contentId": "QGXHL",
+      "slideId": "QGXHL",
+      "cols": 10,
+      "rows": 2,
+      "colOffset": 2,
+      "rowOffset": 1,
+      "widgetIds": [
+        "b8a2e5a5-4d6e-4a95-8ace-d28c10c5faef"
+      ],
+      "widgetId": "b8a2e5a5-4d6e-4a95-8ace-d28c10c5faef",
+      "grid": {
+        "colOffset": 2,
+        "colSpan": 10,
         "rowOffset": 1,
         "rowSpan": 2
       }
     },
     {
-      "tileId": "0847dc8c-dc5f-45c4-9583-070e1e81d51b",
-      "id": "0847dc8c-dc5f-45c4-9583-070e1e81d51b",
-      "contentId": "WYF1Y",
-      "slideId": "WYF1Y",
+      "tileId": "91d45fed-7ce6-4fa6-af65-a79c583c051b",
+      "id": "91d45fed-7ce6-4fa6-af65-a79c583c051b",
+      "contentId": "QGXHL",
+      "slideId": "QGXHL",
+      "cols": 10,
+      "rows": 1,
+      "colOffset": 2,
+      "rowOffset": 1,
+      "widgetIds": [
+        "d36ed5b5-3c74-4f79-b94b-807e182a850e"
+      ],
+      "widgetId": "d36ed5b5-3c74-4f79-b94b-807e182a850e",
+      "grid": {
+        "colOffset": 2,
+        "colSpan": 10,
+        "rowOffset": 1,
+        "rowSpan": 1
+      }
+    },
+    {
+      "tileId": "ca0b0953-a56f-49a6-9ab4-9f5d2c9ae4bd",
+      "id": "ca0b0953-a56f-49a6-9ab4-9f5d2c9ae4bd",
+      "contentId": "QGXHL",
+      "slideId": "QGXHL",
       "cols": 4,
+      "rows": 1,
+      "colOffset": 2,
+      "rowOffset": 1,
+      "widgetIds": [
+        "fab3a9f8-6089-421d-839d-310bc1f61f56"
+      ],
+      "widgetId": "fab3a9f8-6089-421d-839d-310bc1f61f56",
+      "grid": {
+        "colOffset": 2,
+        "colSpan": 4,
+        "rowOffset": 1,
+        "rowSpan": 1
+      }
+    },
+    {
+      "tileId": "088351ab-45e8-415c-9546-1b25eeb8b06c",
+      "id": "088351ab-45e8-415c-9546-1b25eeb8b06c",
+      "contentId": "QGXHL",
+      "slideId": "QGXHL",
+      "cols": 10,
       "rows": 2,
-      "colOffset": 1,
+      "colOffset": 2,
       "rowOffset": 2,
       "widgetIds": [
-        "e0594cef-f289-4079-9483-bae36133c5e0"
+        "728c84b7-4805-451f-aabc-07649f15c0e6"
       ],
-      "widgetId": "e0594cef-f289-4079-9483-bae36133c5e0",
+      "widgetId": "728c84b7-4805-451f-aabc-07649f15c0e6",
       "grid": {
-        "colOffset": 1,
-        "colSpan": 4,
+        "colOffset": 2,
+        "colSpan": 10,
         "rowOffset": 2,
         "rowSpan": 2
       }
     },
     {
-      "tileId": "06976aaa-8064-4914-8441-153021c0e7a9",
-      "id": "06976aaa-8064-4914-8441-153021c0e7a9",
-      "contentId": "WYF1Y",
-      "slideId": "WYF1Y",
+      "tileId": "77598715-a1ac-4992-9823-fc5f14c58292",
+      "id": "77598715-a1ac-4992-9823-fc5f14c58292",
+      "contentId": "QGXHL",
+      "slideId": "QGXHL",
+      "cols": 3,
+      "rows": 2,
+      "colOffset": 2,
+      "rowOffset": 2,
+      "widgetIds": [
+        "9b106063-7710-4c69-a2bc-7c0d9b55a856"
+      ],
+      "widgetId": "9b106063-7710-4c69-a2bc-7c0d9b55a856",
+      "grid": {
+        "colOffset": 2,
+        "colSpan": 3,
+        "rowOffset": 2,
+        "rowSpan": 2
+      }
+    },
+    {
+      "tileId": "3540c1a1-8075-4ca6-af4f-c3aebb217d76",
+      "id": "3540c1a1-8075-4ca6-af4f-c3aebb217d76",
+      "contentId": "QGXHL",
+      "slideId": "QGXHL",
       "cols": 3,
       "rows": 2,
       "colOffset": 4,
       "rowOffset": 2,
       "widgetIds": [
-        "2fc42b49-fec3-4214-b2a1-6aac5f345f64"
+        "4fc9f4cf-7bd7-404e-95fb-6b21c6141895"
       ],
-      "widgetId": "2fc42b49-fec3-4214-b2a1-6aac5f345f64",
+      "widgetId": "4fc9f4cf-7bd7-404e-95fb-6b21c6141895",
       "grid": {
         "colOffset": 4,
         "colSpan": 3,
@@ -100,18 +180,18 @@
       }
     },
     {
-      "tileId": "2ac1db88-c3af-4047-b55f-4c16e74ef10b",
-      "id": "2ac1db88-c3af-4047-b55f-4c16e74ef10b",
-      "contentId": "WYF1Y",
-      "slideId": "WYF1Y",
+      "tileId": "64af238e-a410-411c-9505-f777956b80dd",
+      "id": "64af238e-a410-411c-9505-f777956b80dd",
+      "contentId": "QGXHL",
+      "slideId": "QGXHL",
       "cols": 4,
       "rows": 2,
       "colOffset": 6,
       "rowOffset": 2,
       "widgetIds": [
-        "b971ad38-efcf-4e76-b59a-6b9746640315"
+        "6291c362-4306-46eb-a2b4-3fd590421148"
       ],
-      "widgetId": "b971ad38-efcf-4e76-b59a-6b9746640315",
+      "widgetId": "6291c362-4306-46eb-a2b4-3fd590421148",
       "grid": {
         "colOffset": 6,
         "colSpan": 4,
@@ -120,18 +200,18 @@
       }
     },
     {
-      "tileId": "14bb4271-0239-4438-a0bc-f86b48374af6",
-      "id": "14bb4271-0239-4438-a0bc-f86b48374af6",
-      "contentId": "WYF1Y",
-      "slideId": "WYF1Y",
+      "tileId": "baf86de6-ac18-438f-9030-0ade3ba468f2",
+      "id": "baf86de6-ac18-438f-9030-0ade3ba468f2",
+      "contentId": "QGXHL",
+      "slideId": "QGXHL",
       "cols": 3,
       "rows": 2,
       "colOffset": 9,
       "rowOffset": 2,
       "widgetIds": [
-        "d0deb659-cf08-4441-968c-17e603445680"
+        "0c4184c2-3e01-4b75-a015-0cc99a733e30"
       ],
-      "widgetId": "d0deb659-cf08-4441-968c-17e603445680",
+      "widgetId": "0c4184c2-3e01-4b75-a015-0cc99a733e30",
       "grid": {
         "colOffset": 9,
         "colSpan": 3,
@@ -140,115 +220,135 @@
       }
     },
     {
-      "tileId": "76ac99b4-1ca2-4cc7-b5aa-d2eccfb95567",
-      "id": "76ac99b4-1ca2-4cc7-b5aa-d2eccfb95567",
-      "contentId": "WYF1Y",
-      "slideId": "WYF1Y",
-      "cols": 8,
+      "tileId": "566d54d8-b839-47d5-90a5-343f5f7eb79a",
+      "id": "566d54d8-b839-47d5-90a5-343f5f7eb79a",
+      "contentId": "QGXHL",
+      "slideId": "QGXHL",
+      "cols": 10,
       "rows": 4,
-      "colOffset": 1,
-      "rowOffset": 4,
+      "colOffset": 2,
+      "rowOffset": 3,
       "widgetIds": [
-        "1800a9a7-22d4-4efd-bc11-a1098fc9ba68"
+        "9472dffa-cc29-4d70-b9b3-c2b23abbeed3"
       ],
-      "widgetId": "1800a9a7-22d4-4efd-bc11-a1098fc9ba68",
+      "widgetId": "9472dffa-cc29-4d70-b9b3-c2b23abbeed3",
       "grid": {
-        "colOffset": 1,
-        "colSpan": 8,
-        "rowOffset": 4,
+        "colOffset": 2,
+        "colSpan": 10,
+        "rowOffset": 3,
         "rowSpan": 4
       }
     },
     {
-      "tileId": "bc924af8-7b75-43c6-9e08-15e60912df7c",
-      "id": "bc924af8-7b75-43c6-9e08-15e60912df7c",
-      "contentId": "WYF1Y",
-      "slideId": "WYF1Y",
-      "cols": 4,
-      "rows": 5,
-      "colOffset": 8,
-      "rowOffset": 4,
+      "tileId": "71c416d2-fe9e-4ef8-ac71-d3f7afc59795",
+      "id": "71c416d2-fe9e-4ef8-ac71-d3f7afc59795",
+      "contentId": "QGXHL",
+      "slideId": "QGXHL",
+      "cols": 5,
+      "rows": 4,
+      "colOffset": 2,
+      "rowOffset": 3,
       "widgetIds": [
-        "4c7596f1-72ea-4fa7-81b6-781212b2c2f6"
+        "2cb93b79-a14b-4e25-bc3c-ef6b0d531d22"
       ],
-      "widgetId": "4c7596f1-72ea-4fa7-81b6-781212b2c2f6",
+      "widgetId": "2cb93b79-a14b-4e25-bc3c-ef6b0d531d22",
       "grid": {
-        "colOffset": 8,
-        "colSpan": 4,
-        "rowOffset": 4,
+        "colOffset": 2,
+        "colSpan": 5,
+        "rowOffset": 3,
+        "rowSpan": 4
+      }
+    },
+    {
+      "tileId": "562d0dee-4bdd-47c0-84d2-c9ba5855085a",
+      "id": "562d0dee-4bdd-47c0-84d2-c9ba5855085a",
+      "contentId": "QGXHL",
+      "slideId": "QGXHL",
+      "cols": 6,
+      "rows": 4,
+      "colOffset": 6,
+      "rowOffset": 3,
+      "widgetIds": [
+        "e586cddf-65a3-4b30-9de7-e635d1d82834"
+      ],
+      "widgetId": "e586cddf-65a3-4b30-9de7-e635d1d82834",
+      "grid": {
+        "colOffset": 6,
+        "colSpan": 6,
+        "rowOffset": 3,
+        "rowSpan": 4
+      }
+    },
+    {
+      "tileId": "3f81a5ca-41b2-44dd-825e-ab975b462358",
+      "id": "3f81a5ca-41b2-44dd-825e-ab975b462358",
+      "contentId": "QGXHL",
+      "slideId": "QGXHL",
+      "cols": 10,
+      "rows": 5,
+      "colOffset": 2,
+      "rowOffset": 6,
+      "widgetIds": [
+        "03c7e117-fef8-49bd-a02b-2943531d045f"
+      ],
+      "widgetId": "03c7e117-fef8-49bd-a02b-2943531d045f",
+      "grid": {
+        "colOffset": 2,
+        "colSpan": 10,
+        "rowOffset": 6,
         "rowSpan": 5
       }
     },
     {
-      "tileId": "4d78cd25-3bf4-4902-8842-e99aa4f52b06",
-      "id": "4d78cd25-3bf4-4902-8842-e99aa4f52b06",
-      "contentId": "WYF1Y",
-      "slideId": "WYF1Y",
+      "tileId": "d43904c2-e065-4c8f-92fd-b0df1fae2783",
+      "id": "d43904c2-e065-4c8f-92fd-b0df1fae2783",
+      "contentId": "QGXHL",
+      "slideId": "QGXHL",
       "cols": 8,
-      "rows": 3,
-      "colOffset": 1,
-      "rowOffset": 5,
+      "rows": 5,
+      "colOffset": 2,
+      "rowOffset": 6,
       "widgetIds": [
-        "a8dd4fa3-f518-4079-a791-bf9fd2b34edf"
+        "24587e2f-ade1-4460-8300-92c1382aeb16"
       ],
-      "widgetId": "a8dd4fa3-f518-4079-a791-bf9fd2b34edf",
+      "widgetId": "24587e2f-ade1-4460-8300-92c1382aeb16",
       "grid": {
-        "colOffset": 1,
+        "colOffset": 2,
         "colSpan": 8,
-        "rowOffset": 5,
-        "rowSpan": 3
+        "rowOffset": 6,
+        "rowSpan": 5
       }
     },
     {
-      "tileId": "0b7d2025-fff9-4b7d-9ed1-56b6c652edea",
-      "id": "0b7d2025-fff9-4b7d-9ed1-56b6c652edea",
-      "contentId": "WYF1Y",
-      "slideId": "WYF1Y",
-      "cols": 7,
-      "rows": 4,
-      "colOffset": 5,
-      "rowOffset": 8,
+      "tileId": "c5e2e46a-70a9-44c0-992c-8bd64b91c867",
+      "id": "c5e2e46a-70a9-44c0-992c-8bd64b91c867",
+      "contentId": "QGXHL",
+      "slideId": "QGXHL",
+      "cols": 3,
+      "rows": 5,
+      "colOffset": 9,
+      "rowOffset": 6,
       "widgetIds": [
-        "59e08b40-253a-448b-bdc9-5f316dff0c34"
+        "3d95239b-1df7-4b32-ab71-bea027cdc53a"
       ],
-      "widgetId": "59e08b40-253a-448b-bdc9-5f316dff0c34",
+      "widgetId": "3d95239b-1df7-4b32-ab71-bea027cdc53a",
       "grid": {
-        "colOffset": 5,
-        "colSpan": 7,
-        "rowOffset": 8,
-        "rowSpan": 4
-      }
-    },
-    {
-      "tileId": "62683983-6bfe-41f1-9ad6-3c7933616c47",
-      "id": "62683983-6bfe-41f1-9ad6-3c7933616c47",
-      "contentId": "WYF1Y",
-      "slideId": "WYF1Y",
-      "cols": 5,
-      "rows": 4,
-      "colOffset": 1,
-      "rowOffset": 8,
-      "widgetIds": [
-        "ac0895b3-0291-4350-801c-80717d041420"
-      ],
-      "widgetId": "ac0895b3-0291-4350-801c-80717d041420",
-      "grid": {
-        "colOffset": 1,
-        "colSpan": 5,
-        "rowOffset": 8,
-        "rowSpan": 4
+        "colOffset": 9,
+        "colSpan": 3,
+        "rowOffset": 6,
+        "rowSpan": 5
       }
     }
   ],
   "widgets": [
     {
-      "id": "b854f5d3-7004-4c15-afa7-6cda63b38e9f",
-      "widgetId": "b854f5d3-7004-4c15-afa7-6cda63b38e9f",
+      "id": "de177c02-3919-4681-8bf8-7ccc7f6ad40c",
+      "widgetId": "de177c02-3919-4681-8bf8-7ccc7f6ad40c",
       "type": "column2d",
-      "componentType": "CHART",
-      "title": "Frame 12",
-      "semanticLabel": "Neri Rell",
-      "sourceComponentId": "141:2407",
+      "componentType": "SIDEBAR",
+      "title": "Sidebar",
+      "semanticLabel": "Members",
+      "sourceComponentId": "202:5485",
       "grid": {
         "colOffset": 0,
         "colSpan": 2,
@@ -258,88 +358,202 @@
       "position": {
         "x": 0.0,
         "y": 0.0,
-        "width": 184.0,
+        "width": 216.0,
         "height": 1100.0
       },
       "text": [
-        "/",
-        "YARD /",
-        "RESOURCE SYSTEM 02",
-        "Capacity",
-        "Allocation",
-        "Reservations",
-        "People",
-        "Audit log",
-        "NR",
-        "Neri Rell"
-      ],
-      "needsReview": true,
-      "chartData": [],
-      "chart": {
-        "showValues": "1",
-        "showLegend": "0",
-        "theme": "fusion,evernorth-light",
-        "caption": "Frame 12"
-      },
-      "chartDataWarning": "Could not extract chart data from source text"
-    },
-    {
-      "id": "2a395caf-6083-4829-af77-c7dc937f7c2f",
-      "widgetId": "2a395caf-6083-4829-af77-c7dc937f7c2f",
-      "type": "column2d",
-      "componentType": "OTHER",
-      "title": "Frame 12",
-      "semanticLabel": "History",
-      "sourceComponentId": "141:2388",
-      "grid": {
-        "colOffset": 1,
-        "colSpan": 6,
-        "rowOffset": 1,
-        "rowSpan": 2
-      },
-      "position": {
-        "x": 214.0,
-        "y": 151.0,
-        "width": 550.0,
-        "height": 42.0
-      },
-      "text": [
-        "Allocation",
-        "Availability",
-        "Requests",
-        "History"
+        "♧ HIPAA-compliant workspace",
+        "Last sync today at 08:42 AM",
+        "● All systems connected",
+        "Help & resources",
+        "Settings",
+        "Reports",
+        "Care gaps",
+        "Prescriptions",
+        "Claims",
+        "Members"
       ],
       "needsReview": false
     },
     {
-      "id": "e0594cef-f289-4079-9483-bae36133c5e0",
-      "widgetId": "e0594cef-f289-4079-9483-bae36133c5e0",
+      "id": "eeb7c9d9-15f4-4221-b0f1-baa86e00891b",
+      "widgetId": "eeb7c9d9-15f4-4221-b0f1-baa86e00891b",
       "type": "column2d",
-      "componentType": "KPI_CARD",
-      "title": "Frame 12",
-      "semanticLabel": "+82 h vs. previous week",
-      "sourceComponentId": "141:2365",
+      "componentType": "HEADER",
+      "title": "Top header",
+      "semanticLabel": "Workspace",
+      "sourceComponentId": "202:5535",
       "grid": {
         "colOffset": 1,
+        "colSpan": 11,
+        "rowOffset": 0,
+        "rowSpan": 1
+      },
+      "position": {
+        "x": 216.0,
+        "y": 0.0,
+        "width": 1224.0,
+        "height": 72.0
+      },
+      "text": [
+        "Clinical administrator",
+        "Emily Carter",
+        "EC",
+        "Search members, claims, providers...",
+        "Reports",
+        "/",
+        "Workspace"
+      ],
+      "needsReview": false
+    },
+    {
+      "id": "b8a2e5a5-4d6e-4a95-8ace-d28c10c5faef",
+      "widgetId": "b8a2e5a5-4d6e-4a95-8ace-d28c10c5faef",
+      "type": "column2d",
+      "componentType": "HEADER",
+      "title": "Page introduction",
+      "semanticLabel": "Pharmacy Spend",
+      "sourceComponentId": "202:5553",
+      "grid": {
+        "colOffset": 2,
+        "colSpan": 10,
+        "rowOffset": 1,
+        "rowSpan": 2
+      },
+      "position": {
+        "x": 244.0,
+        "y": 92.0,
+        "width": 1168.0,
+        "height": 98.0
+      },
+      "text": [
+        "● Updated Oct 9 · 08:42 AM",
+        "All providers",
+        "All health plans",
+        "Apr – Sep 2026",
+        "Export report",
+        "Track drug cost, generic utilisation, and formulary performance.",
+        "Pharmacy Spend"
+      ],
+      "needsReview": false
+    },
+    {
+      "id": "d36ed5b5-3c74-4f79-b94b-807e182a850e",
+      "widgetId": "d36ed5b5-3c74-4f79-b94b-807e182a850e",
+      "type": "column2d",
+      "componentType": "HEADER",
+      "title": "Heading and export",
+      "semanticLabel": "Pharmacy Spend",
+      "sourceComponentId": "202:5554",
+      "grid": {
+        "colOffset": 2,
+        "colSpan": 10,
+        "rowOffset": 1,
+        "rowSpan": 1
+      },
+      "position": {
+        "x": 244.0,
+        "y": 92.0,
+        "width": 1168.0,
+        "height": 51.0
+      },
+      "text": [
+        "Export report",
+        "Track drug cost, generic utilisation, and formulary performance.",
+        "Pharmacy Spend"
+      ],
+      "needsReview": false
+    },
+    {
+      "id": "fab3a9f8-6089-421d-839d-310bc1f61f56",
+      "widgetId": "fab3a9f8-6089-421d-839d-310bc1f61f56",
+      "type": "column2d",
+      "componentType": "HEADER",
+      "title": "Page heading",
+      "semanticLabel": "Pharmacy Spend",
+      "sourceComponentId": "202:5555",
+      "grid": {
+        "colOffset": 2,
         "colSpan": 4,
+        "rowOffset": 1,
+        "rowSpan": 1
+      },
+      "position": {
+        "x": 244.0,
+        "y": 92.0,
+        "width": 361.0,
+        "height": 51.0
+      },
+      "text": [
+        "Track drug cost, generic utilisation, and formulary performance.",
+        "Pharmacy Spend"
+      ],
+      "needsReview": false
+    },
+    {
+      "id": "728c84b7-4805-451f-aabc-07649f15c0e6",
+      "widgetId": "728c84b7-4805-451f-aabc-07649f15c0e6",
+      "type": "column2d",
+      "componentType": "OTHER",
+      "title": "Key performance indicators",
+      "semanticLabel": "↑ 2.4 pp",
+      "sourceComponentId": "202:5579",
+      "grid": {
+        "colOffset": 2,
+        "colSpan": 10,
         "rowOffset": 2,
         "rowSpan": 2
       },
       "position": {
-        "x": 214.0,
-        "y": 218.0,
-        "width": 279.0,
-        "height": 132.0
+        "x": 244.0,
+        "y": 202.0,
+        "width": 1168.0,
+        "height": 128.0
       },
       "text": [
-        "BOOKED HOURS",
-        "1,248",
-        "+82 h vs. previous week"
+        "vs. prior period",
+        "↑ 9.2%",
+        "$648K",
+        "Rebate captured",
+        "vs. prior period",
+        "↑ 6.1%",
+        "$1.82M",
+        "Specialty spend",
+        "vs. prior period",
+        "↑ 2.4 pp"
+      ],
+      "needsReview": false
+    },
+    {
+      "id": "9b106063-7710-4c69-a2bc-7c0d9b55a856",
+      "widgetId": "9b106063-7710-4c69-a2bc-7c0d9b55a856",
+      "type": "column2d",
+      "componentType": "KPI_CARD",
+      "title": "KPI Card / Total drug spend",
+      "semanticLabel": "Total drug spend",
+      "sourceComponentId": "202:5580",
+      "grid": {
+        "colOffset": 2,
+        "colSpan": 3,
+        "rowOffset": 2,
+        "rowSpan": 2
+      },
+      "position": {
+        "x": 244.0,
+        "y": 202.0,
+        "width": 280.0,
+        "height": 128.0
+      },
+      "text": [
+        "vs. prior period",
+        "↓ 3.8%",
+        "$4.05M",
+        "Total drug spend"
       ],
       "needsReview": false,
-      "kpiValue": "1,248",
-      "kpiLabel": "BOOKED HOURS",
-      "trend": "+82 h vs. previous week",
+      "kpiValue": "$4.05M",
+      "kpiLabel": "Total drug spend",
+      "trend": "↓ 3.8% vs. prior period",
       "chart": {
         "showLabels": "0",
         "showValues": "0",
@@ -362,7 +576,7 @@
               {
                 "id": "lbl-1",
                 "type": "text",
-                "text": "BOOKED HOURS",
+                "text": "Total drug spend",
                 "x": "$chartCenterX",
                 "y": "$chartTopMargin+25",
                 "fontSize": "14"
@@ -370,16 +584,112 @@
               {
                 "id": "val-1",
                 "type": "text",
-                "text": "1,248",
+                "text": "$4.05M",
                 "x": "$chartCenterX",
                 "y": "$chartTopMargin+58",
-                "fontSize": "26",
+                "fontSize": "36",
                 "bold": "1"
               },
               {
                 "id": "trend-1",
                 "type": "text",
-                "text": "+82 h vs. previous week",
+                "text": "↓ 3.8% vs. prior period",
+                "x": "$chartCenterX",
+                "y": "$chartTopMargin+100",
+                "fontSize": "12",
+                "color": "#dc2626"
+              }
+            ]
+          }
+        ]
+      },
+      "dataRequest": {
+        "moduleCode": "CMP",
+        "type": "static",
+        "staticData": [
+          {
+            "id": "9b106063-7710-4c69-a2bc-7c0d9b55a856",
+            "label": "kpi-9b106063",
+            "data": [
+              {
+                "label": "Total drug spend",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "4fc9f4cf-7bd7-404e-95fb-6b21c6141895",
+      "widgetId": "4fc9f4cf-7bd7-404e-95fb-6b21c6141895",
+      "type": "column2d",
+      "componentType": "KPI_CARD",
+      "title": "KPI Card / Generic fill rate",
+      "semanticLabel": "Generic fill rate",
+      "sourceComponentId": "202:5581",
+      "grid": {
+        "colOffset": 4,
+        "colSpan": 3,
+        "rowOffset": 2,
+        "rowSpan": 2
+      },
+      "position": {
+        "x": 540.0,
+        "y": 202.0,
+        "width": 280.0,
+        "height": 128.0
+      },
+      "text": [
+        "vs. prior period",
+        "↑ 2.4 pp",
+        "88.6%",
+        "Generic fill rate"
+      ],
+      "needsReview": false,
+      "kpiValue": "88.6%",
+      "kpiLabel": "Generic fill rate",
+      "trend": "↑ 2.4 pp vs. prior period",
+      "chart": {
+        "showLabels": "0",
+        "showValues": "0",
+        "showLegend": "0",
+        "showXAxisLine": "0",
+        "showYAxisLine": "0",
+        "plotFillAlpha": "0",
+        "plotHoverEffect": "0",
+        "theme": "fusion,evernorth-light"
+      },
+      "annotations": {
+        "groups": [
+          {
+            "id": "kpi-group",
+            "textAlign": "center",
+            "font": "Montserrat",
+            "fontSize": "14",
+            "color": "#172033",
+            "items": [
+              {
+                "id": "lbl-1",
+                "type": "text",
+                "text": "Generic fill rate",
+                "x": "$chartCenterX",
+                "y": "$chartTopMargin+25",
+                "fontSize": "14"
+              },
+              {
+                "id": "val-1",
+                "type": "text",
+                "text": "88.6%",
+                "x": "$chartCenterX",
+                "y": "$chartTopMargin+58",
+                "fontSize": "36",
+                "bold": "1"
+              },
+              {
+                "id": "trend-1",
+                "type": "text",
+                "text": "↑ 2.4 pp vs. prior period",
                 "x": "$chartCenterX",
                 "y": "$chartTopMargin+100",
                 "fontSize": "12",
@@ -394,11 +704,11 @@
         "type": "static",
         "staticData": [
           {
-            "id": "e0594cef-f289-4079-9483-bae36133c5e0",
-            "label": "kpi-e0594cef",
+            "id": "4fc9f4cf-7bd7-404e-95fb-6b21c6141895",
+            "label": "kpi-4fc9f4cf",
             "data": [
               {
-                "label": "BOOKED HOURS",
+                "label": "Generic fill rate",
                 "value": 1
               }
             ]
@@ -407,99 +717,13 @@
       }
     },
     {
-      "id": "2fc42b49-fec3-4214-b2a1-6aac5f345f64",
-      "widgetId": "2fc42b49-fec3-4214-b2a1-6aac5f345f64",
+      "id": "6291c362-4306-46eb-a2b4-3fd590421148",
+      "widgetId": "6291c362-4306-46eb-a2b4-3fd590421148",
       "type": "column2d",
       "componentType": "KPI_CARD",
-      "title": "Frame 12",
-      "semanticLabel": "186 h",
-      "sourceComponentId": "141:2349",
-      "grid": {
-        "colOffset": 4,
-        "colSpan": 3,
-        "rowOffset": 2,
-        "rowSpan": 2
-      },
-      "position": {
-        "x": 511.0,
-        "y": 218.0,
-        "width": 279.0,
-        "height": 141.0
-      },
-      "text": [
-        "UNALLOCATED",
-        "186 h",
-        "14.9% of availability"
-      ],
-      "needsReview": false,
-      "kpiValue": "14.9% of availability",
-      "kpiLabel": "UNALLOCATED",
-      "trend": "",
-      "chart": {
-        "showLabels": "0",
-        "showValues": "0",
-        "showLegend": "0",
-        "showXAxisLine": "0",
-        "showYAxisLine": "0",
-        "plotFillAlpha": "0",
-        "plotHoverEffect": "0",
-        "theme": "fusion,evernorth-light"
-      },
-      "annotations": {
-        "groups": [
-          {
-            "id": "kpi-group",
-            "textAlign": "center",
-            "font": "Montserrat",
-            "fontSize": "14",
-            "color": "#172033",
-            "items": [
-              {
-                "id": "lbl-1",
-                "type": "text",
-                "text": "UNALLOCATED",
-                "x": "$chartCenterX",
-                "y": "$chartTopMargin+25",
-                "fontSize": "14"
-              },
-              {
-                "id": "val-1",
-                "type": "text",
-                "text": "14.9% of availability",
-                "x": "$chartCenterX",
-                "y": "$chartTopMargin+58",
-                "fontSize": "26",
-                "bold": "1"
-              }
-            ]
-          }
-        ]
-      },
-      "dataRequest": {
-        "moduleCode": "CMP",
-        "type": "static",
-        "staticData": [
-          {
-            "id": "2fc42b49-fec3-4214-b2a1-6aac5f345f64",
-            "label": "kpi-2fc42b49",
-            "data": [
-              {
-                "label": "UNALLOCATED",
-                "value": 1
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "b971ad38-efcf-4e76-b59a-6b9746640315",
-      "widgetId": "b971ad38-efcf-4e76-b59a-6b9746640315",
-      "type": "column2d",
-      "componentType": "KPI_CARD",
-      "title": "Frame 12",
-      "semanticLabel": "3 require reassignment",
-      "sourceComponentId": "141:2333",
+      "title": "KPI Card / Specialty spend",
+      "semanticLabel": "Specialty spend",
+      "sourceComponentId": "202:5582",
       "grid": {
         "colOffset": 6,
         "colSpan": 4,
@@ -507,20 +731,21 @@
         "rowSpan": 2
       },
       "position": {
-        "x": 808.0,
-        "y": 218.0,
-        "width": 279.0,
-        "height": 132.0
+        "x": 836.0,
+        "y": 202.0,
+        "width": 280.0,
+        "height": 128.0
       },
       "text": [
-        "OVERBOOKED SLOTS",
-        "09",
-        "3 require reassignment"
+        "vs. prior period",
+        "↑ 6.1%",
+        "$1.82M",
+        "Specialty spend"
       ],
       "needsReview": false,
-      "kpiValue": "3 require reassignment",
-      "kpiLabel": "OVERBOOKED SLOTS",
-      "trend": "",
+      "kpiValue": "$1.82M",
+      "kpiLabel": "Specialty spend",
+      "trend": "↑ 6.1% vs. prior period",
       "chart": {
         "showLabels": "0",
         "showValues": "0",
@@ -543,7 +768,7 @@
               {
                 "id": "lbl-1",
                 "type": "text",
-                "text": "OVERBOOKED SLOTS",
+                "text": "Specialty spend",
                 "x": "$chartCenterX",
                 "y": "$chartTopMargin+25",
                 "fontSize": "14"
@@ -551,11 +776,20 @@
               {
                 "id": "val-1",
                 "type": "text",
-                "text": "3 require reassignment",
+                "text": "$1.82M",
                 "x": "$chartCenterX",
                 "y": "$chartTopMargin+58",
-                "fontSize": "26",
+                "fontSize": "36",
                 "bold": "1"
+              },
+              {
+                "id": "trend-1",
+                "type": "text",
+                "text": "↑ 6.1% vs. prior period",
+                "x": "$chartCenterX",
+                "y": "$chartTopMargin+100",
+                "fontSize": "12",
+                "color": "#16a34a"
               }
             ]
           }
@@ -566,11 +800,11 @@
         "type": "static",
         "staticData": [
           {
-            "id": "b971ad38-efcf-4e76-b59a-6b9746640315",
-            "label": "kpi-b971ad38",
+            "id": "6291c362-4306-46eb-a2b4-3fd590421148",
+            "label": "kpi-6291c362",
             "data": [
               {
-                "label": "OVERBOOKED SLOTS",
+                "label": "Specialty spend",
                 "value": 1
               }
             ]
@@ -579,13 +813,13 @@
       }
     },
     {
-      "id": "d0deb659-cf08-4441-968c-17e603445680",
-      "widgetId": "d0deb659-cf08-4441-968c-17e603445680",
+      "id": "0c4184c2-3e01-4b75-a015-0cc99a733e30",
+      "widgetId": "0c4184c2-3e01-4b75-a015-0cc99a733e30",
       "type": "column2d",
       "componentType": "KPI_CARD",
-      "title": "Frame 12",
-      "semanticLabel": "Oldest request: 6 days",
-      "sourceComponentId": "141:2317",
+      "title": "KPI Card / Rebate captured",
+      "semanticLabel": "Rebate captured",
+      "sourceComponentId": "202:5583",
       "grid": {
         "colOffset": 9,
         "colSpan": 3,
@@ -593,20 +827,21 @@
         "rowSpan": 2
       },
       "position": {
-        "x": 1105.0,
-        "y": 218.0,
-        "width": 299.0,
-        "height": 141.0
+        "x": 1132.0,
+        "y": 202.0,
+        "width": 280.0,
+        "height": 128.0
       },
       "text": [
-        "REQUEST BACKLOG",
-        "24",
-        "Oldest request: 6 days"
+        "vs. prior period",
+        "↑ 9.2%",
+        "$648K",
+        "Rebate captured"
       ],
       "needsReview": false,
-      "kpiValue": "Oldest request: 6 days",
-      "kpiLabel": "REQUEST BACKLOG",
-      "trend": "",
+      "kpiValue": "$648K",
+      "kpiLabel": "Rebate captured",
+      "trend": "↑ 9.2% vs. prior period",
       "chart": {
         "showLabels": "0",
         "showValues": "0",
@@ -629,7 +864,7 @@
               {
                 "id": "lbl-1",
                 "type": "text",
-                "text": "REQUEST BACKLOG",
+                "text": "Rebate captured",
                 "x": "$chartCenterX",
                 "y": "$chartTopMargin+25",
                 "fontSize": "14"
@@ -637,11 +872,20 @@
               {
                 "id": "val-1",
                 "type": "text",
-                "text": "Oldest request: 6 days",
+                "text": "$648K",
                 "x": "$chartCenterX",
                 "y": "$chartTopMargin+58",
-                "fontSize": "26",
+                "fontSize": "36",
                 "bold": "1"
+              },
+              {
+                "id": "trend-1",
+                "type": "text",
+                "text": "↑ 9.2% vs. prior period",
+                "x": "$chartCenterX",
+                "y": "$chartTopMargin+100",
+                "fontSize": "12",
+                "color": "#16a34a"
               }
             ]
           }
@@ -652,11 +896,11 @@
         "type": "static",
         "staticData": [
           {
-            "id": "d0deb659-cf08-4441-968c-17e603445680",
-            "label": "kpi-d0deb659",
+            "id": "0c4184c2-3e01-4b75-a015-0cc99a733e30",
+            "label": "kpi-0c4184c2",
             "data": [
               {
-                "label": "REQUEST BACKLOG",
+                "label": "Rebate captured",
                 "value": 1
               }
             ]
@@ -665,123 +909,413 @@
       }
     },
     {
-      "id": "1800a9a7-22d4-4efd-bc11-a1098fc9ba68",
-      "widgetId": "1800a9a7-22d4-4efd-bc11-a1098fc9ba68",
+      "id": "9472dffa-cc29-4d70-b9b3-c2b23abbeed3",
+      "widgetId": "9472dffa-cc29-4d70-b9b3-c2b23abbeed3",
       "type": "column2d",
       "componentType": "OTHER",
-      "title": "Frame 12",
-      "semanticLabel": "Thu PM",
-      "sourceComponentId": "141:2193",
+      "title": "Drug spend analytics",
+      "semanticLabel": "248k",
+      "sourceComponentId": "202:5584",
       "grid": {
-        "colOffset": 1,
-        "colSpan": 8,
-        "rowOffset": 4,
+        "colOffset": 2,
+        "colSpan": 10,
+        "rowOffset": 3,
         "rowSpan": 4
       },
       "position": {
-        "x": 214.0,
-        "y": 388.0,
-        "width": 790.0,
-        "height": 338.0
+        "x": 244.0,
+        "y": 342.0,
+        "width": 1168.0,
+        "height": 232.0
       },
       "text": [
-        "Resource load matrix",
-        "Booked capacity (%) · Grey cells are provisional allocations",
-        "Mon AM",
-        "Mon PM",
-        "Tue AM",
-        "Tue PM",
-        "Wed AM",
-        "Wed PM",
-        "Thu AM",
-        "Thu PM"
+        "500k",
+        "250k",
+        "0k",
+        "182k",
+        "Entyvio",
+        "194k",
+        "Rinvoq",
+        "216k",
+        "Jardiance",
+        "248k"
       ],
       "needsReview": false
     },
     {
-      "id": "4c7596f1-72ea-4fa7-81b6-781212b2c2f6",
-      "widgetId": "4c7596f1-72ea-4fa7-81b6-781212b2c2f6",
+      "id": "2cb93b79-a14b-4e25-bc3c-ef6b0d531d22",
+      "widgetId": "2cb93b79-a14b-4e25-bc3c-ef6b0d531d22",
       "type": "column2d",
-      "componentType": "KPI_CARD",
-      "title": "Frame 12",
-      "semanticLabel": "2 pp above the planning threshold",
-      "sourceComponentId": "141:2143",
+      "componentType": "CHART",
+      "title": "Chart / Spend by month",
+      "semanticLabel": "600k",
+      "sourceComponentId": "202:5585",
       "grid": {
-        "colOffset": 8,
-        "colSpan": 4,
-        "rowOffset": 4,
-        "rowSpan": 5
+        "colOffset": 2,
+        "colSpan": 5,
+        "rowOffset": 3,
+        "rowSpan": 4
       },
       "position": {
-        "x": 1026.0,
-        "y": 388.0,
-        "width": 378.0,
-        "height": 355.0
+        "x": 244.0,
+        "y": 342.0,
+        "width": 576.0,
+        "height": 232.0
       },
       "text": [
-        "Committed capacity",
-        "Effective utilization · Excludes leave",
-        "87%",
-        "Comfort band: 65–85%",
-        "0",
-        "100",
-        "2 pp above the planning threshold"
+        "Sep",
+        "Aug",
+        "Jul",
+        "Jun",
+        "May",
+        "Apr",
+        "0k",
+        "200k",
+        "400k",
+        "600k"
+      ],
+      "needsReview": true,
+      "chartData": [],
+      "chartText": [
+        {
+          "text": "Sep",
+          "x": 766.0,
+          "y": 545.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Aug",
+          "x": 685.0,
+          "y": 545.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Jul",
+          "x": 585.0,
+          "y": 545.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Jun",
+          "x": 485.0,
+          "y": 545.0,
+          "source": "descendant"
+        },
+        {
+          "text": "May",
+          "x": 385.0,
+          "y": 545.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Apr",
+          "x": 304.0,
+          "y": 545.0,
+          "source": "descendant"
+        },
+        {
+          "text": "0k",
+          "x": 260.0,
+          "y": 530.0,
+          "source": "descendant"
+        },
+        {
+          "text": "200k",
+          "x": 260.0,
+          "y": 501.0,
+          "source": "descendant"
+        },
+        {
+          "text": "400k",
+          "x": 260.0,
+          "y": 472.0,
+          "source": "descendant"
+        },
+        {
+          "text": "600k",
+          "x": 260.0,
+          "y": 443.0,
+          "source": "descendant"
+        },
+        {
+          "text": "800k",
+          "x": 260.0,
+          "y": 414.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Generic",
+          "x": 326.0,
+          "y": 399.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Brand",
+          "x": 272.0,
+          "y": 399.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Paid drug claims · $ thousands",
+          "x": 260.0,
+          "y": 379.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Spend by month",
+          "x": 260.0,
+          "y": 358.0,
+          "source": "descendant"
+        }
+      ],
+      "chart": {
+        "showValues": "1",
+        "showLegend": "0",
+        "theme": "fusion,evernorth-light",
+        "caption": "Chart / Spend by month"
+      },
+      "chartDataWarning": "Could not extract chart data from source geometry"
+    },
+    {
+      "id": "e586cddf-65a3-4b30-9de7-e635d1d82834",
+      "widgetId": "e586cddf-65a3-4b30-9de7-e635d1d82834",
+      "type": "column2d",
+      "componentType": "CHART",
+      "title": "Chart / Top 8 drugs by spend",
+      "semanticLabel": "248k",
+      "sourceComponentId": "202:5617",
+      "grid": {
+        "colOffset": 6,
+        "colSpan": 6,
+        "rowOffset": 3,
+        "rowSpan": 4
+      },
+      "position": {
+        "x": 836.0,
+        "y": 342.0,
+        "width": 576.0,
+        "height": 232.0
+      },
+      "text": [
+        "500k",
+        "250k",
+        "0k",
+        "182k",
+        "Entyvio",
+        "194k",
+        "Rinvoq",
+        "216k",
+        "Jardiance",
+        "248k"
       ],
       "needsReview": false,
-      "kpiValue": "2 pp above the planning threshold",
-      "kpiLabel": "Effective utilization · Excludes leave",
-      "trend": "",
+      "chartData": [
+        {
+          "label": "Humira",
+          "value": 420000.0
+        },
+        {
+          "label": "Ozempic",
+          "value": 368000.0
+        },
+        {
+          "label": "Stelara",
+          "value": 312000.0
+        },
+        {
+          "label": "Dupixent",
+          "value": 286000.0
+        },
+        {
+          "label": "Eliquis",
+          "value": 248000.0
+        },
+        {
+          "label": "Jardiance",
+          "value": 216000.0
+        },
+        {
+          "label": "Rinvoq",
+          "value": 194000.0
+        },
+        {
+          "label": "Entyvio",
+          "value": 182000.0
+        }
+      ],
+      "chartText": [
+        {
+          "text": "500k",
+          "x": 1330.0,
+          "y": 539.0,
+          "source": "descendant"
+        },
+        {
+          "text": "250k",
+          "x": 1162.5,
+          "y": 539.0,
+          "source": "descendant"
+        },
+        {
+          "text": "0k",
+          "x": 1006.0,
+          "y": 539.0,
+          "source": "descendant"
+        },
+        {
+          "text": "182k",
+          "x": 1364.0,
+          "y": 515.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Entyvio",
+          "x": 852.0,
+          "y": 515.0,
+          "source": "descendant"
+        },
+        {
+          "text": "194k",
+          "x": 1364.0,
+          "y": 499.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Rinvoq",
+          "x": 852.0,
+          "y": 499.0,
+          "source": "descendant"
+        },
+        {
+          "text": "216k",
+          "x": 1364.0,
+          "y": 483.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Jardiance",
+          "x": 852.0,
+          "y": 483.0,
+          "source": "descendant"
+        },
+        {
+          "text": "248k",
+          "x": 1364.0,
+          "y": 467.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Eliquis",
+          "x": 852.0,
+          "y": 467.0,
+          "source": "descendant"
+        },
+        {
+          "text": "286k",
+          "x": 1364.0,
+          "y": 451.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Dupixent",
+          "x": 852.0,
+          "y": 451.0,
+          "source": "descendant"
+        },
+        {
+          "text": "312k",
+          "x": 1364.0,
+          "y": 435.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Stelara",
+          "x": 852.0,
+          "y": 435.0,
+          "source": "descendant"
+        },
+        {
+          "text": "368k",
+          "x": 1364.0,
+          "y": 419.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Ozempic",
+          "x": 852.0,
+          "y": 419.0,
+          "source": "descendant"
+        },
+        {
+          "text": "420k",
+          "x": 1364.0,
+          "y": 403.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Humira",
+          "x": 852.0,
+          "y": 403.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Net plan cost · $ thousands",
+          "x": 852.0,
+          "y": 379.0,
+          "source": "descendant"
+        },
+        {
+          "text": "Top 8 drugs by spend",
+          "x": 852.0,
+          "y": 358.0,
+          "source": "descendant"
+        }
+      ],
       "chart": {
-        "showLabels": "0",
-        "showValues": "0",
-        "showLegend": "0",
-        "showXAxisLine": "0",
-        "showYAxisLine": "0",
-        "plotFillAlpha": "0",
-        "plotHoverEffect": "0",
-        "theme": "fusion,evernorth-light"
-      },
-      "annotations": {
-        "groups": [
-          {
-            "id": "kpi-group",
-            "textAlign": "center",
-            "font": "Montserrat",
-            "fontSize": "14",
-            "color": "#172033",
-            "items": [
-              {
-                "id": "lbl-1",
-                "type": "text",
-                "text": "Effective utilization · Excludes leave",
-                "x": "$chartCenterX",
-                "y": "$chartTopMargin+25",
-                "fontSize": "14"
-              },
-              {
-                "id": "val-1",
-                "type": "text",
-                "text": "2 pp above the planning threshold",
-                "x": "$chartCenterX",
-                "y": "$chartTopMargin+58",
-                "fontSize": "26",
-                "bold": "1"
-              }
-            ]
-          }
-        ]
+        "showValues": "1",
+        "showLegend": "1",
+        "theme": "fusion,evernorth-light",
+        "caption": "Chart / Top 8 drugs by spend"
       },
       "dataRequest": {
         "moduleCode": "CMP",
         "type": "static",
         "staticData": [
           {
-            "id": "4c7596f1-72ea-4fa7-81b6-781212b2c2f6",
-            "label": "kpi-4c7596f1",
+            "id": "e586cddf-65a3-4b30-9de7-e635d1d82834",
+            "label": "widget-e586cddf",
             "data": [
               {
-                "label": "Effective utilization · Excludes leave",
-                "value": 1
+                "label": "Humira",
+                "value": 420000.0
+              },
+              {
+                "label": "Ozempic",
+                "value": 368000.0
+              },
+              {
+                "label": "Stelara",
+                "value": 312000.0
+              },
+              {
+                "label": "Dupixent",
+                "value": 286000.0
+              },
+              {
+                "label": "Eliquis",
+                "value": 248000.0
+              },
+              {
+                "label": "Jardiance",
+                "value": 216000.0
+              },
+              {
+                "label": "Rinvoq",
+                "value": 194000.0
+              },
+              {
+                "label": "Entyvio",
+                "value": 182000.0
               }
             ]
           }
@@ -789,133 +1323,170 @@
       }
     },
     {
-      "id": "a8dd4fa3-f518-4079-a791-bf9fd2b34edf",
-      "widgetId": "a8dd4fa3-f518-4079-a791-bf9fd2b34edf",
-      "type": "table",
-      "componentType": "TABLE",
-      "title": "Frame 12",
-      "semanticLabel": "Fri PM",
-      "sourceComponentId": "141:2194",
+      "id": "03c7e117-fef8-49bd-a02b-2943531d045f",
+      "widgetId": "03c7e117-fef8-49bd-a02b-2943531d045f",
+      "type": "column2d",
+      "componentType": "OTHER",
+      "title": "Formulary and filtering",
+      "semanticLabel": "Filter panel",
+      "sourceComponentId": "202:5666",
       "grid": {
-        "colOffset": 1,
-        "colSpan": 8,
-        "rowOffset": 5,
-        "rowSpan": 3
+        "colOffset": 2,
+        "colSpan": 10,
+        "rowOffset": 6,
+        "rowSpan": 5
       },
       "position": {
-        "x": 236.0,
-        "y": 469.0,
-        "width": 746.0,
-        "height": 222.0
+        "x": 244.0,
+        "y": 586.0,
+        "width": 1168.0,
+        "height": 368.0
       },
       "text": [
-        "Mon AM",
-        "Mon PM",
-        "Tue AM",
-        "Tue PM",
-        "Wed AM",
-        "Wed PM",
-        "Thu AM",
-        "Thu PM",
-        "Fri AM",
-        "Fri PM"
+        "8 formulary categories",
+        "Apply filters",
+        "Include specialty drugs",
+        "Retail + mail order",
+        "All drug classes",
+        "All formulary tiers",
+        "Refine formulary results without changing the reporting period.",
+        "Filter panel",
+        "3",
+        "2"
+      ],
+      "needsReview": false
+    },
+    {
+      "id": "24587e2f-ade1-4460-8300-92c1382aeb16",
+      "widgetId": "24587e2f-ade1-4460-8300-92c1382aeb16",
+      "type": "table",
+      "componentType": "TABLE",
+      "title": "Table / Formulary tiers",
+      "semanticLabel": "142",
+      "sourceComponentId": "202:5667",
+      "grid": {
+        "colOffset": 2,
+        "colSpan": 8,
+        "rowOffset": 6,
+        "rowSpan": 5
+      },
+      "position": {
+        "x": 244.0,
+        "y": 586.0,
+        "width": 916.0,
+        "height": 368.0
+      },
+      "text": [
+        "3",
+        "2",
+        "1",
+        "Rows per page: 8",
+        "Showing 1–8 of 64 records",
+        "On track",
+        "12.8%",
+        "Varies",
+        "$48,000",
+        "142"
       ],
       "needsReview": true,
       "tableConfig": {
         "columns": [
-          "Mon AM",
-          "Mon PM",
-          "Tue AM",
-          "Tue PM",
-          "Wed AM",
-          "Wed PM"
+          "Formulary tiers"
         ],
-        "rows": []
-      }
+        "rows": [
+          [
+            "Plan design and drug utilisation · Q3 2026"
+          ],
+          [
+            "Tier"
+          ],
+          [
+            "Tier 1"
+          ],
+          [
+            "MBR-10482"
+          ],
+          [
+            "Tier 2"
+          ],
+          [
+            "MBR-10482"
+          ],
+          [
+            "Tier 3"
+          ],
+          [
+            "MBR-10482"
+          ],
+          [
+            "Tier 4"
+          ],
+          [
+            "MBR-10482"
+          ],
+          [
+            "Tier 5"
+          ],
+          [
+            "MBR-10482"
+          ],
+          [
+            "Tier 6"
+          ],
+          [
+            "MBR-10482"
+          ],
+          [
+            "Preventive"
+          ],
+          [
+            "MBR-10482"
+          ],
+          [
+            "Excluded"
+          ],
+          [
+            "MBR-10482"
+          ],
+          [
+            "Showing 1–8 of 64 records"
+          ]
+        ],
+        "records": []
+      },
+      "tableDataWarning": "Table rows were reconstructed heuristically; verify column alignment"
     },
     {
-      "id": "59e08b40-253a-448b-bdc9-5f316dff0c34",
-      "widgetId": "59e08b40-253a-448b-bdc9-5f316dff0c34",
+      "id": "3d95239b-1df7-4b32-ab71-bea027cdc53a",
+      "widgetId": "3d95239b-1df7-4b32-ab71-bea027cdc53a",
       "type": "column2d",
-      "componentType": "CHART",
-      "title": "Frame 12",
-      "semanticLabel": "Assembly · Cover for 2 absent operators",
-      "sourceComponentId": "141:2070",
+      "componentType": "FILTER",
+      "title": "Filter panel",
+      "semanticLabel": "Filter panel",
+      "sourceComponentId": "202:5699",
       "grid": {
-        "colOffset": 5,
-        "colSpan": 7,
-        "rowOffset": 8,
-        "rowSpan": 4
+        "colOffset": 9,
+        "colSpan": 3,
+        "rowOffset": 6,
+        "rowSpan": 5
       },
       "position": {
-        "x": 684.0,
-        "y": 788.0,
-        "width": 720.0,
-        "height": 256.0
+        "x": 1176.0,
+        "y": 586.0,
+        "width": 236.0,
+        "height": 338.0
       },
       "text": [
-        "Allocation review queue",
-        "Priority cases · 3 of 24 open requests",
-        "VA",
-        "Venn Arel",
-        "Test bay · Extra 12 h / Duplicate reservation",
-        "P1",
-        "Pending",
-        "SK",
-        "Serri Keld",
-        "Assembly · Cover for 2 absent operators"
+        "8 formulary categories",
+        "Apply filters",
+        "Include specialty drugs",
+        "Retail + mail order",
+        "All drug classes",
+        "All formulary tiers",
+        "Refine formulary results without changing the reporting period.",
+        "Filter panel"
       ],
-      "needsReview": true,
-      "chartData": [],
-      "chart": {
-        "showValues": "1",
-        "showLegend": "0",
-        "theme": "fusion,evernorth-light",
-        "caption": "Frame 12"
-      },
-      "chartDataWarning": "Could not extract chart data from source text"
-    },
-    {
-      "id": "ac0895b3-0291-4350-801c-80717d041420",
-      "widgetId": "ac0895b3-0291-4350-801c-80717d041420",
-      "type": "column2d",
-      "componentType": "CHART",
-      "title": "Frame 12",
-      "semanticLabel": "Test",
-      "sourceComponentId": "141:2104",
-      "grid": {
-        "colOffset": 1,
-        "colSpan": 5,
-        "rowOffset": 8,
-        "rowSpan": 4
-      },
-      "position": {
-        "x": 214.0,
-        "y": 797.0,
-        "width": 448.0,
-        "height": 247.0
-      },
-      "text": [
-        "Hours by workstream",
-        "Booked / held / free · Indexed totals",
-        "100",
-        "75",
-        "50",
-        "25",
-        "0",
-        "Fab",
-        "Assy",
-        "Test"
-      ],
-      "needsReview": true,
-      "chartData": [],
-      "chart": {
-        "showValues": "1",
-        "showLegend": "0",
-        "theme": "fusion,evernorth-light",
-        "caption": "Frame 12"
-      },
-      "chartDataWarning": "Could not extract chart data from source text"
+      "needsReview": false
     }
   ],
   "backgroundPaths": [
@@ -929,10 +1500,10 @@
     }
   ],
   "validation": {
-    "componentCount": 11,
-    "widgetCount": 11,
-    "tileCount": 11,
-    "reviewRequired": 4,
+    "componentCount": 16,
+    "widgetCount": 16,
+    "tileCount": 16,
+    "reviewRequired": 2,
     "validationErrors": []
   }
 }

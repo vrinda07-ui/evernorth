@@ -70,6 +70,12 @@ export const AbsoluteLayoutViewer: React.FC<AbsoluteLayoutViewerProps> = ({
             const chartData = widget?.chartData
             const texts = widget?.text || []
             const isKpi = componentType === 'KPI_CARD'
+            const isTable = componentType === 'TABLE'
+
+            const tableConfig = (widget as any)?.tableConfig
+            const tableRecords = tableConfig?.records || []
+            const tableColumns = tableConfig?.columns || []
+            const tableRows = tableConfig?.rows || []
 
             const x = position?.x ?? 0
             const y = position?.y ?? 0
@@ -93,7 +99,8 @@ export const AbsoluteLayoutViewer: React.FC<AbsoluteLayoutViewerProps> = ({
                     </span>
                   </div>
 
-                  {isKpi ? (
+                  
+{isKpi ? (
                     <div className="mt-1 flex-shrink-0 space-y-1">
                       <div className="text-xs font-medium text-slate-600 line-clamp-2">
                         {kpiLabel}
@@ -118,6 +125,76 @@ export const AbsoluteLayoutViewer: React.FC<AbsoluteLayoutViewerProps> = ({
                           {trend}
                         </div>
                       )}
+                    </div>
+                  ) : isTable ? (
+                    <div className="mt-2 flex-1 min-h-0 overflow-auto">
+                      <div className="text-xs font-semibold text-slate-800 mb-2">
+                        {widget?.title || semanticLabel}
+                      </div>
+
+                      <table className="w-full text-left border-collapse">
+                        <thead>
+                          <tr className="border-b border-slate-200">
+                            {tableColumns.map((column: string, i: number) => (
+                              <th
+                                key={i}
+                                className="py-1.5 px-2 text-[10px] font-semibold text-slate-500"
+                              >
+                                {column}
+                              </th>
+                            ))}
+                            {tableRecords.length > 0 && (
+                              <th className="py-1.5 px-2 text-[10px] font-semibold text-slate-500">
+                                Spend bar
+                              </th>
+                            )}
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          {tableRecords.length > 0 ? (
+                            tableRecords.map((record: any, i: number) => (
+                              <tr
+                                key={i}
+                                className="border-b border-slate-100 hover:bg-slate-50"
+                              >
+                                <td className="py-2 px-2 text-[10px] text-slate-500">
+                                  {record.rank}
+                                </td>
+                                <td className="py-2 px-2 text-[11px] font-medium text-slate-800">
+                                  {record.label}
+                                </td>
+                                <td className="py-2 px-2 text-[11px] font-semibold text-slate-800 whitespace-nowrap">
+                                  {record.displayValue}
+                                </td>
+                                <td className="py-2 px-2 min-w-[90px]">
+                                  <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+                                    <div
+                                      className="h-full rounded-full bg-blue-500"
+                                      style={{
+                                        width: `${Math.max(0, Math.min(100, Number(record.barPercentage) || 0))}%`,
+                                      }}
+                                    />
+                                  </div>
+                                </td>
+                              </tr>
+                            ))
+                          ) : (
+                            tableRows.map((row: string[], i: number) => (
+                              <tr key={i} className="border-b border-slate-100">
+                                {row.map((cell: string, j: number) => (
+                                  <td
+                                    key={j}
+                                    className="py-2 px-2 text-[10px] text-slate-700"
+                                  >
+                                    {cell}
+                                  </td>
+                                ))}
+                              </tr>
+                            ))
+                          )}
+                        </tbody>
+                      </table>
                     </div>
                   ) : (
                     <>

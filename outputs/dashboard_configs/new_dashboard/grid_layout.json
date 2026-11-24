@@ -1,6 +1,6 @@
 {
-  "dashboard_id": "141:2068",
-  "dashboard_name": "Dashboard 18",
+  "dashboard_id": "202:5484",
+  "dashboard_name": "Design 09 – Pharmacy Spend",
   "grid": {
     "columns": 12,
     "rows": 12
@@ -9,12 +9,12 @@
     "width": 1440.0,
     "height": 1100.0
   },
-  "component_count": 11,
+  "component_count": 16,
   "components": [
     {
-      "candidate_id": "141:2407",
-      "name": "Frame 12",
-      "predicted_type": "CHART",
+      "candidate_id": "202:5485",
+      "name": "Sidebar",
+      "predicted_type": "SIDEBAR",
       "grid": {
         "colOffset": 0,
         "colSpan": 2,
@@ -24,47 +24,115 @@
       "position_relative_to_dashboard": {
         "x": 0.0,
         "y": 0.0,
-        "width": 184.0,
+        "width": 216.0,
         "height": 1100.0
       }
     },
     {
-      "candidate_id": "141:2388",
-      "name": "Frame 12",
-      "predicted_type": "OTHER",
+      "candidate_id": "202:5535",
+      "name": "Top header",
+      "predicted_type": "HEADER",
       "grid": {
         "colOffset": 1,
-        "colSpan": 6,
+        "colSpan": 11,
+        "rowOffset": 0,
+        "rowSpan": 1
+      },
+      "position_relative_to_dashboard": {
+        "x": 216.0,
+        "y": 0.0,
+        "width": 1224.0,
+        "height": 72.0
+      }
+    },
+    {
+      "candidate_id": "202:5553",
+      "name": "Page introduction",
+      "predicted_type": "HEADER",
+      "grid": {
+        "colOffset": 2,
+        "colSpan": 10,
         "rowOffset": 1,
         "rowSpan": 2
       },
       "position_relative_to_dashboard": {
-        "x": 214.0,
-        "y": 151.0,
-        "width": 550.0,
-        "height": 42.0
+        "x": 244.0,
+        "y": 92.0,
+        "width": 1168.0,
+        "height": 98.0
       }
     },
     {
-      "candidate_id": "141:2365",
-      "name": "Frame 12",
-      "predicted_type": "KPI_CARD",
+      "candidate_id": "202:5554",
+      "name": "Heading and export",
+      "predicted_type": "HEADER",
       "grid": {
-        "colOffset": 1,
+        "colOffset": 2,
+        "colSpan": 10,
+        "rowOffset": 1,
+        "rowSpan": 1
+      },
+      "position_relative_to_dashboard": {
+        "x": 244.0,
+        "y": 92.0,
+        "width": 1168.0,
+        "height": 51.0
+      }
+    },
+    {
+      "candidate_id": "202:5555",
+      "name": "Page heading",
+      "predicted_type": "HEADER",
+      "grid": {
+        "colOffset": 2,
         "colSpan": 4,
+        "rowOffset": 1,
+        "rowSpan": 1
+      },
+      "position_relative_to_dashboard": {
+        "x": 244.0,
+        "y": 92.0,
+        "width": 361.0,
+        "height": 51.0
+      }
+    },
+    {
+      "candidate_id": "202:5579",
+      "name": "Key performance indicators",
+      "predicted_type": "OTHER",
+      "grid": {
+        "colOffset": 2,
+        "colSpan": 10,
         "rowOffset": 2,
         "rowSpan": 2
       },
       "position_relative_to_dashboard": {
-        "x": 214.0,
-        "y": 218.0,
-        "width": 279.0,
-        "height": 132.0
+        "x": 244.0,
+        "y": 202.0,
+        "width": 1168.0,
+        "height": 128.0
       }
     },
     {
-      "candidate_id": "141:2349",
-      "name": "Frame 12",
+      "candidate_id": "202:5580",
+      "name": "KPI Card / Total drug spend",
+      "predicted_type": "KPI_CARD",
+      "grid": {
+        "colOffset": 2,
+        "colSpan": 3,
+        "rowOffset": 2,
+        "rowSpan": 2
+      },
+      "position_relative_to_dashboard": {
+        "x": 244.0,
+        "y": 202.0,
+        "width": 280.0,
+        "height": 128.0
+      }
+    },
+    {
+      "candidate_id": "202:5581",
+      "name": "KPI Card / Generic fill rate",
       "predicted_type": "KPI_CARD",
       "grid": {
         "colOffset": 4,
@@ -73,15 +141,15 @@
         "rowSpan": 2
       },
       "position_relative_to_dashboard": {
-        "x": 511.0,
-        "y": 218.0,
-        "width": 279.0,
-        "height": 141.0
+        "x": 540.0,
+        "y": 202.0,
+        "width": 280.0,
+        "height": 128.0
       }
     },
     {
-      "candidate_id": "141:2333",
-      "name": "Frame 12",
+      "candidate_id": "202:5582",
+      "name": "KPI Card / Specialty spend",
       "predicted_type": "KPI_CARD",
       "grid": {
         "colOffset": 6,
@@ -90,15 +158,15 @@
         "rowSpan": 2
       },
       "position_relative_to_dashboard": {
-        "x": 808.0,
-        "y": 218.0,
-        "width": 279.0,
-        "height": 132.0
+        "x": 836.0,
+        "y": 202.0,
+        "width": 280.0,
+        "height": 128.0
       }
     },
     {
-      "candidate_id": "141:2317",
-      "name": "Frame 12",
+      "candidate_id": "202:5583",
+      "name": "KPI Card / Rebate captured",
       "predicted_type": "KPI_CARD",
       "grid": {
         "colOffset": 9,
@@ -107,95 +175,112 @@
         "rowSpan": 2
       },
       "position_relative_to_dashboard": {
-        "x": 1105.0,
-        "y": 218.0,
-        "width": 299.0,
-        "height": 141.0
+        "x": 1132.0,
+        "y": 202.0,
+        "width": 280.0,
+        "height": 128.0
       }
     },
     {
-      "candidate_id": "141:2193",
-      "name": "Frame 12",
+      "candidate_id": "202:5584",
+      "name": "Drug spend analytics",
       "predicted_type": "OTHER",
       "grid": {
-        "colOffset": 1,
-        "colSpan": 8,
-        "rowOffset": 4,
+        "colOffset": 2,
+        "colSpan": 10,
+        "rowOffset": 3,
         "rowSpan": 4
       },
       "position_relative_to_dashboard": {
-        "x": 214.0,
-        "y": 388.0,
-        "width": 790.0,
-        "height": 338.0
+        "x": 244.0,
+        "y": 342.0,
+        "width": 1168.0,
+        "height": 232.0
       }
     },
     {
-      "candidate_id": "141:2143",
-      "name": "Frame 12",
-      "predicted_type": "KPI_CARD",
+      "candidate_id": "202:5585",
+      "name": "Chart / Spend by month",
+      "predicted_type": "CHART",
       "grid": {
-        "colOffset": 8,
-        "colSpan": 4,
-        "rowOffset": 4,
+        "colOffset": 2,
+        "colSpan": 5,
+        "rowOffset": 3,
+        "rowSpan": 4
+      },
+      "position_relative_to_dashboard": {
+        "x": 244.0,
+        "y": 342.0,
+        "width": 576.0,
+        "height": 232.0
+      }
+    },
+    {
+      "candidate_id": "202:5617",
+      "name": "Chart / Top 8 drugs by spend",
+      "predicted_type": "CHART",
+      "grid": {
+        "colOffset": 6,
+        "colSpan": 6,
+        "rowOffset": 3,
+        "rowSpan": 4
+      },
+      "position_relative_to_dashboard": {
+        "x": 836.0,
+        "y": 342.0,
+        "width": 576.0,
+        "height": 232.0
+      }
+    },
+    {
+      "candidate_id": "202:5666",
+      "name": "Formulary and filtering",
+      "predicted_type": "OTHER",
+      "grid": {
+        "colOffset": 2,
+        "colSpan": 10,
+        "rowOffset": 6,
         "rowSpan": 5
       },
       "position_relative_to_dashboard": {
-        "x": 1026.0,
-        "y": 388.0,
-        "width": 378.0,
-        "height": 355.0
+        "x": 244.0,
+        "y": 586.0,
+        "width": 1168.0,
+        "height": 368.0
       }
     },
     {
-      "candidate_id": "141:2194",
-      "name": "Frame 12",
+      "candidate_id": "202:5667",
+      "name": "Table / Formulary tiers",
       "predicted_type": "TABLE",
       "grid": {
-        "colOffset": 1,
+        "colOffset": 2,
         "colSpan": 8,
-        "rowOffset": 5,
-        "rowSpan": 3
+        "rowOffset": 6,
+        "rowSpan": 5
       },
       "position_relative_to_dashboard": {
-        "x": 236.0,
-        "y": 469.0,
-        "width": 746.0,
-        "height": 222.0
+        "x": 244.0,
+        "y": 586.0,
+        "width": 916.0,
+        "height": 368.0
       }
     },
     {
-      "candidate_id": "141:2070",
-      "name": "Frame 12",
-      "predicted_type": "CHART",
+      "candidate_id": "202:5699",
+      "name": "Filter panel",
+      "predicted_type": "FILTER",
       "grid": {
-        "colOffset": 5,
-        "colSpan": 7,
-        "rowOffset": 8,
-        "rowSpan": 4
+        "colOffset": 9,
+        "colSpan": 3,
+        "rowOffset": 6,
+        "rowSpan": 5
       },
       "position_relative_to_dashboard": {
-        "x": 684.0,
-        "y": 788.0,
-        "width": 720.0,
-        "height": 256.0
-      }
-    },
-    {
-      "candidate_id": "141:2104",
-      "name": "Frame 12",
-      "predicted_type": "CHART",
-      "grid": {
-        "colOffset": 1,
-        "colSpan": 5,
-        "rowOffset": 8,
-        "rowSpan": 4
-      },
-      "position_relative_to_dashboard": {
-        "x": 214.0,
-        "y": 797.0,
-        "width": 448.0,
-        "height": 247.0
+        "x": 1176.0,
+        "y": 586.0,
+        "width": 236.0,
+        "height": 338.0
       }
     }
   ]

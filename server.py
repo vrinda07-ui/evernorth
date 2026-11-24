@@ -11,8 +11,7 @@ import uuid
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-
-from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi import FastAPI, File, HTTPException, UploadFile, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -641,29 +640,38 @@ def download_history_json(run_id: str, json_type: str):
     )
 
 
-@app.post("/ingest")
-async def plugin_ingest(file: UploadFile = File(None)):
-    """Compatibility endpoint for Figma plugin."""
-    try:
-        active_figma = ROOT / "dataset" / "new_dashboard" / "figma_data.json"
-        if file:
-            content = await file.read()
-            payload = json.loads(content.decode("utf-8"))
-        else:
-            raise HTTPException(status_code=400, detail="Missing payload")
 
+@app.post("/ingest")
+async def plugin_ingest(request: Request):
+    """Receive JSON directly from the Figma plugin."""
+    try:
+        payload = await request.json()
+
+        if not isinstance(payload, dict):
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid JSON payload"
+            )
+
+        active_figma = ROOT / "dataset" / "new_dashboard" / "figma_data.json"
         active_figma.parent.mkdir(parents=True, exist_ok=True)
+
         with open(active_figma, "w", encoding="utf-8") as f:
             json.dump(payload, f, indent=2)
 
         result = execute_full_pipeline(payload)
+
         return {
             "message": "Design received and Vista page.json generated.",
             "widgets": result["stats"]["widgets"],
             "tiles": result["stats"]["tiles"]
         }
+
+    except HTTPException:
+        raise
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
+
 
 
 # Serve dashboard_preview.html at /dashboard_preview.html

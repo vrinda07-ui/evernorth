@@ -36,6 +36,7 @@ if str(ROOT / "src" / "preprocessing") not in sys.path:
 import generate_candidates as gc
 from src.features.extract_features import calculate_features
 
+
 # Standard file paths
 MODEL_FILE = ROOT / "models" / "xgboost_model.json"
 ENCODER_FILE = ROOT / "models" / "label_encoder.pkl"
@@ -143,6 +144,30 @@ def run_candidate_generation(nodes: List[Dict[str, Any]], dashboard_name: str = 
     candidates = []
 
     for node in nodes:
+
+        node_type = node.get("type")
+        node_name = gc.norm(node.get("name"))
+
+        # Exclude the local component library itself.
+        if node_name == "local components":
+            continue
+
+        # Exclude reusable component definitions.
+        if node_type in {"COMPONENT", "COMPONENT_SET"}:
+            continue
+
+        # Exclude descendants of the local component library.
+        ancestors = gc.ancestor_ids(node.get("id"), node_map)
+
+        inside_component_library = any(
+            gc.norm(node_map.get(ancestor_id, {}).get("name"))
+            == "local components"
+            for ancestor_id in ancestors
+        )
+
+        if inside_component_library:
+            continue
+
         if not gc.is_container(node):
             continue
 
@@ -442,6 +467,33 @@ def run_grid_layout(figma_data: Dict[str, Any], predictions: List[Dict[str, Any]
                 dashboard_node = n
                 break
 
+    # If the detected content container is nested inside a larger design frame,
+    # use the nearest ancestor that directly contains a Sidebar/navigation panel.
+    # This keeps the Sidebar and dashboard content in the same 12x12 coordinate space.
+    if dashboard_id and dashboard_node:
+        current_id = dashboard_id
+        while current_id in parents:
+            parent_id = parents[current_id]
+            if parent_id is None or parent_id not in nodes:
+                break
+
+            sibling_ids = children.get(parent_id, [])
+            has_sidebar = any(
+                any(
+                    keyword in str(nodes[sibling_id].get("name", "")).lower()
+                    for keyword in ("sidebar", "navigation", "navbar")
+                )
+                for sibling_id in sibling_ids
+                if sibling_id in nodes
+            )
+
+            if has_sidebar:
+                dashboard_id = parent_id
+                dashboard_node = nodes[parent_id]
+                break
+
+            current_id = parent_id
+
     if not dashboard_node or get_bbox(dashboard_node) is None:
         dashboard_bbox = {"x": 0.0, "y": 0.0, "width": default_dims["width"], "height": default_dims["height"]}
         dashboard_id = "default-dashboard"
@@ -461,7 +513,10 @@ def run_grid_layout(figma_data: Dict[str, Any], predictions: List[Dict[str, Any]
     selected = []
     for pred in predictions:
         ptype = pred.get("predicted_type")
-        if ptype not in {"CHART", "KPI_CARD", "TABLE", "FILTER", "OTHER"}:
+        if ptype not in {
+            "CHART", "KPI_CARD", "TABLE", "FILTER",
+            "HEADER", "SIDEBAR", "OTHER"
+        }:
             continue
         cid = str(pred.get("candidate_id"))
         node = nodes.get(cid)
@@ -494,43 +549,55 @@ def run_grid_layout(figma_data: Dict[str, Any], predictions: List[Dict[str, Any]
 
     # Add structural components (Sidebar, Header) as direct children of dashboard
     # These are added as OTHER type since they're not in the model's class set
+    # Add structural components without overriding their actual types.
     for child_id in children.get(dashboard_id, []):
-        if child_id in nodes:
-            child = nodes[child_id]
-            child_name = child.get("name", "").lower()
-            bbox = get_bbox(child)
+        if child_id not in nodes:
+            continue
 
-            # Check if this is a structural component
-            is_structural = (
-                "sidebar" in child_name or
-                "header" in child_name or
-                "navbar" in child_name or
-                "navigation" in child_name
-            )
+        child = nodes[child_id]
+        child_name = child.get("name", "").lower()
+        bbox = get_bbox(child)
 
-            if is_structural and bbox:
-                # Check if not already in selected
-                already_selected = any(
-                    item["candidate_id"] == child_id
-                    for item in selected
-                )
+        if not bbox:
+            continue
 
-                if not already_selected:
-                    rel = {
-                        "x": bbox["x"] - dash_x,
-                        "y": bbox["y"] - dash_y,
-                        "width": bbox["width"],
-                        "height": bbox["height"],
-                    }
+        structural_type = None
 
-                    selected.append({
-                        "candidate_id": child_id,
-                        "name": child.get("name", ""),
-                        "predicted_type": "OTHER",
-                        "bbox": bbox,
-                        "relative": rel,
-                    })
+        if "sidebar" in child_name:
+            structural_type = "SIDEBAR"
+        elif "header" in child_name:
+            structural_type = "HEADER"
 
+        if structural_type is None:
+            continue
+
+        already_selected = any(
+            item["candidate_id"] == child_id
+            for item in selected
+        )
+
+        if already_selected:
+            continue
+
+        rel = {
+            "x": bbox["x"] - dash_x,
+            "y": bbox["y"] - dash_y,
+            "width": bbox["width"],
+            "height": bbox["height"],
+        }
+
+        selected.append({
+            "candidate_id": child_id,
+            "name": child.get("name", ""),
+            "predicted_type": structural_type,
+            "bbox": bbox,
+            "relative": rel,
+        })
+
+        print(
+            f"Added structural component: "
+            f"{child.get('name')} as {structural_type}"
+        )
     # Remove duplicate component IDs without discarding valid nested widgets.
     # KPI cards are commonly children of a KPI section/container, so preserve them
     # as separate widgets. Nested chart/table internals are handled earlier during
@@ -586,118 +653,976 @@ def run_grid_layout(figma_data: Dict[str, Any], predictions: List[Dict[str, Any]
         "components": components,
     }
 
+def extract_horizontal_bar_data(
+    component: Dict[str, Any],
+    source_nodes,
+) -> List[Dict[str, Any]]:
+    """Extract label/value pairs from Figma horizontal bar rows."""
+
+    if isinstance(source_nodes, dict):
+        nodes = list(source_nodes.values())
+    else:
+        nodes = list(source_nodes or [])
+
+    candidate_id = str(component.get("candidate_id", ""))
+
+    by_id = {
+        str(node.get("id")): node
+        for node in nodes
+        if isinstance(node, dict) and node.get("id") is not None
+    }
+
+    chart = by_id.get(candidate_id)
+    if not chart:
+        return []
+
+    def descendants(parent):
+        result = []
+        stack = list(parent.get("children", []))
+
+        while stack:
+            node = stack.pop()
+            result.append(node)
+            stack.extend(node.get("children", []))
+
+        return result
+
+    def text(node):
+        return str(
+            node.get("characters") or node.get("text") or ""
+        ).strip()
+
+    result = []
+
+    for row in descendants(chart):
+        if row.get("name") != "Category bar":
+            continue
+
+        row_nodes = descendants(row)
+
+        label = next(
+            (
+                text(n) for n in row_nodes
+                if n.get("name") == "Category label" and text(n)
+            ),
+            "",
+        )
+
+        value_text = next(
+            (
+                text(n) for n in row_nodes
+                if n.get("type") == "TEXT"
+                and n.get("name") == "Label"
+                and text(n)
+                and re.search(r"\d", text(n))
+            ),
+            "",
+        )
+
+        match = re.fullmatch(
+            r"\$?\s*(-?\d+(?:,\d{3})*(?:\.\d+)?)\s*([kKmMbB]?)",
+            value_text,
+        )
+
+        if not label or not match:
+            continue
+
+        value = float(match.group(1).replace(",", ""))
+        suffix = match.group(2).lower()
+
+        multiplier = {
+            "": 1,
+            "k": 1_000,
+            "m": 1_000_000,
+            "b": 1_000_000_000,
+        }[suffix]
+
+        result.append({
+            "label": label,
+            "value": value * multiplier,
+        })
+
+    return result
+
+
+def get_component_descendants(candidate_id: str, source_nodes):
+    """Return every descendant of a component using flattened parent_id links."""
+    nodes = list(source_nodes.values()) if isinstance(source_nodes, dict) else list(source_nodes or [])
+    children = {}
+    for node in nodes:
+        if not isinstance(node, dict):
+            continue
+        parent_id = node.get("parent_id")
+        if parent_id is not None:
+            children.setdefault(str(parent_id), []).append(node)
+
+    result, stack, visited = [], list(children.get(str(candidate_id), [])), set()
+    while stack:
+        node = stack.pop()
+        node_id = node.get("id")
+        key = str(node_id) if node_id is not None else f"anonymous-{id(node)}"
+        if key in visited:
+            continue
+        visited.add(key)
+        result.append(node)
+        stack.extend(children.get(str(node_id), []))
+    return result
+
+
+def _node_text(node):
+    value = node.get("text")
+    if not isinstance(value, str) or not value.strip():
+        value = node.get("characters")
+    return str(value or "").strip()
+
+
+def _parse_chart_number(value):
+    """Parse an explicitly displayed number; do not infer from visual size/color."""
+    text = str(value or "").strip().replace(",", "")
+    match = re.fullmatch(r"[$₹€£]?\s*(-?\d+(?:\.\d+)?)\s*([%kKmMbB]?)", text)
+    if not match:
+        return None
+    number = float(match.group(1))
+    suffix = match.group(2).lower()
+    multiplier = {"": 1, "%": 1, "k": 1_000, "m": 1_000_000, "b": 1_000_000_000}
+    return number * multiplier[suffix]
+
+
+def _node_center(node):
+    box = get_bbox(node)
+    if not box:
+        return None
+    return (
+        box["x"] + box["width"] / 2,
+        box["y"] + box["height"] / 2,
+    )
+
+
+
+def _cluster_text_rows(records, tolerance):
+    """Group text records that occupy approximately the same horizontal row."""
+    rows = []
+    normalized_records = []
+
+    for record in records:
+        item = dict(record)
+
+        # Support both precomputed centre coordinates and y/height geometry.
+        if "cy" not in item:
+            item["cy"] = (
+                float(item.get("y", 0)) +
+                float(item.get("height", 0)) / 2
+            )
+
+        if "x" not in item:
+            item["x"] = 0
+
+        normalized_records.append(item)
+
+    for record in sorted(
+        normalized_records,
+        key=lambda item: (item["cy"], item["x"])
+    ):
+        target = None
+
+        for row in rows:
+            if abs(record["cy"] - row["cy"]) <= tolerance:
+                target = row
+                break
+
+        if target is None:
+            target = {"cy": record["cy"], "items": []}
+            rows.append(target)
+
+        target["items"].append(record)
+        target["cy"] = sum(
+            item["cy"] for item in target["items"]
+        ) / len(target["items"])
+
+    for row in rows:
+        row["items"].sort(key=lambda item: item["x"])
+
+    return sorted(rows, key=lambda row: row["cy"])
+
+
 
 def extract_chart_data(
     prediction: Dict[str, Any],
     source_nodes: Optional[List[Dict[str, Any]]] = None,
     component: Optional[Dict[str, Any]] = None,
 ) -> List[Dict[str, Any]]:
-    """Extract line-chart points from Figma geometry when reliable."""
+    """
+    Extract chart data using semantic Figma hierarchy first,
+    then use geometry calibration for line charts.
+    """
+    component = component or prediction or {}
+    candidate_id = str(
+        component.get("candidate_id")
+        or prediction.get("candidate_id")
+        or ""
+    )
 
-    source_nodes = source_nodes or []
-    component = component or {}
+    nodes = (
+        list(source_nodes.values())
+        if isinstance(source_nodes, dict)
+        else list(source_nodes or [])
+    )
 
-    def get_node_text(node: Dict[str, Any]) -> str:
-        return str(
-            node.get("text") or node.get("characters") or ""
-        ).strip()
+    descendants = get_component_descendants(candidate_id, source_nodes)
 
-    def node_bbox(node: Dict[str, Any]) -> Optional[Dict[str, float]]:
-        box = get_bbox(node)
-        if box:
-            return box
+    by_id = {
+        str(node.get("id")): node
+        for node in nodes
+        if isinstance(node, dict) and node.get("id") is not None
+    }
+
+    def node_name(node):
+        return str(node.get("name") or "").strip().lower()
+
+    def node_type(node):
+        return str(node.get("type") or "").upper()
+
+    def text_of(node):
+        return _node_text(node)
+
+    def descendants_of(parent_id):
+        return get_component_descendants(str(parent_id), source_nodes)
+
+    def ancestor_named(node, expected_name):
+        parent_id = node.get("parent_id")
+        visited = set()
+
+        while parent_id is not None:
+            parent_key = str(parent_id)
+
+            if parent_key in visited:
+                break
+            visited.add(parent_key)
+
+            parent = by_id.get(parent_key)
+            if not parent:
+                break
+
+            if node_name(parent) == expected_name.lower():
+                return parent
+
+            parent_id = parent.get("parent_id")
+
         return None
 
-    candidate_id = str(component.get("candidate_id", ""))
-    plot_nodes = [
-        node for node in source_nodes
-        if str(node.get("parent_id", "")) == candidate_id
+    # ---------------------------------------------------------
+    # 1. ENGAGEMENT FUNNEL
+    # Pair Stage title and Stage conversion inside each
+    # individual Funnel stage frame.
+    # ---------------------------------------------------------
+    funnel_stages = {}
+
+    for node in descendants:
+        if node_type(node) != "TEXT":
+            continue
+
+        name = node_name(node)
+        if name not in ("stage title", "stage conversion"):
+            continue
+
+        stage_frame = ancestor_named(node, "Funnel stage")
+        if not stage_frame:
+            continue
+
+        stage_id = str(stage_frame.get("id"))
+        funnel_stages.setdefault(stage_id, {
+            "y": (get_bbox(stage_frame) or {}).get("y", 0),
+            "label": "",
+            "value": None,
+        })
+
+        value_text = text_of(node)
+
+        if name == "stage title":
+            funnel_stages[stage_id]["label"] = value_text
+
+        elif name == "stage conversion":
+            # Handles strings such as "12,000 · 100%"
+            match = re.search(
+                r"([\d,]+(?:\.\d+)?)\s*[·•]\s*([\d.]+)\s*%",
+                value_text
+            )
+
+            if match:
+                funnel_stages[stage_id]["value"] = float(
+                    match.group(1).replace(",", "")
+                )
+
+    funnel_result = [
+        {
+            "label": item["label"],
+            "value": round(item["value"], 4),
+        }
+        for item in sorted(
+            funnel_stages.values(),
+            key=lambda item: item["y"]
+        )
+        if item["label"] and item["value"] is not None
     ]
 
-    points = []
-    x_labels = []
-    y_labels = []
+    if len(funnel_result) >= 2:
+        return funnel_result
 
-    for node in plot_nodes:
-        box = node_bbox(node)
+    # ---------------------------------------------------------
+    # 2. CHANNEL MIX
+    # Pair Channel name and Channel share inside each
+    # individual Channel entry frame.
+    # ---------------------------------------------------------
+    channel_entries = {}
+
+    for node in descendants:
+        if node_type(node) != "TEXT":
+            continue
+
+        name = node_name(node)
+        if name not in ("channel name", "channel share"):
+            continue
+
+        entry_frame = ancestor_named(node, "channel entry")
+        if not entry_frame:
+            continue
+
+        entry_id = str(entry_frame.get("id"))
+        channel_entries.setdefault(entry_id, {
+            "y": (get_bbox(entry_frame) or {}).get("y", 0),
+            "label": "",
+            "value": None,
+        })
+
+        value_text = text_of(node)
+
+        if name == "channel name":
+            channel_entries[entry_id]["label"] = value_text
+
+        elif name == "channel share":
+            # Extract the count, not the percentage.
+            match = re.search(
+                r"([\d,]+(?:\.\d+)?)\s*[·•]\s*([\d.]+)\s*%",
+                value_text
+            )
+
+            if match:
+                channel_entries[entry_id]["value"] = float(
+                    match.group(1).replace(",", "")
+                )
+
+    channel_result = [
+        {
+            "label": item["label"],
+            "value": round(item["value"], 4),
+        }
+        for item in sorted(
+            channel_entries.values(),
+            key=lambda item: item["y"]
+        )
+        if item["label"] and item["value"] is not None
+    ]
+
+    if len(channel_result) >= 2:
+        return channel_result
+
+    # ---------------------------------------------------------
+    # 3. GENERAL TEXT RECORDS AND GEOMETRY
+    # ---------------------------------------------------------
+    text_records = []
+    point_nodes = []
+
+    for node in descendants:
+        box = get_bbox(node)
         if not box:
             continue
 
-        name = str(node.get("name", "")).strip().lower()
-        node_type = str(node.get("type", "")).upper()
-        text = get_node_text(node)
+        if node_type(node) == "TEXT":
+            text = text_of(node)
+            if not text:
+                continue
 
-        if name == "data point" and node_type == "ELLIPSE":
-            points.append({
+            text_records.append({
+                "text": text,
+                "numeric": _parse_chart_number(text),
+                "x": box["x"],
+                "y": box["y"],
+                "cx": box["x"] + box["width"] / 2,
+                "cy": box["y"] + box["height"] / 2,
+                "width": box["width"],
+                "height": box["height"],
+            })
+
+        elif node_type(node) == "ELLIPSE":
+            point_nodes.append({
                 "x": box["x"] + box["width"] / 2,
                 "y": box["y"] + box["height"] / 2,
             })
 
-        if node_type == "TEXT":
-            if re.fullmatch(r"W\d{2}", text, flags=re.IGNORECASE):
-                x_labels.append({
-                    "label": text.upper(),
-                    "x": box["x"] + box["width"] / 2,
+    # ---------------------------------------------------------
+    # 4. LINE CHART
+    # Match date labels to points by horizontal position.
+    # Calibrate point Y positions using numeric Y-axis ticks.
+    # ---------------------------------------------------------
+    date_pattern = re.compile(
+    r"^(?:\d{1,2}\s+)?"
+    r"(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)$",
+    re.IGNORECASE
+)
+
+    date_labels = [
+        item for item in text_records
+        if date_pattern.fullmatch(item["text"].strip())
+    ]
+
+    y_ticks = [
+        {
+            "value": item["numeric"],
+            "y": item["cy"],
+        }
+        for item in text_records
+        if item["numeric"] is not None
+    ]
+
+    if len(point_nodes) >= 2 and len(y_ticks) >= 2:
+        point_nodes.sort(key=lambda item: item["x"])
+        date_labels.sort(key=lambda item: item["cx"])
+        y_ticks.sort(key=lambda item: item["y"])
+
+        if len(date_labels) == len(point_nodes):
+            result = []
+
+            for point, label in zip(point_nodes, date_labels):
+                above = [
+                    tick for tick in y_ticks
+                    if tick["y"] <= point["y"]
+                ]
+                below = [
+                    tick for tick in y_ticks
+                    if tick["y"] >= point["y"]
+                ]
+
+                if not above or not below:
+                    result = []
+                    break
+
+                top = max(above, key=lambda tick: tick["y"])
+                bottom = min(below, key=lambda tick: tick["y"])
+
+                if abs(bottom["y"] - top["y"]) < 1e-9:
+                    value = top["value"]
+                else:
+                    fraction = (
+                        (point["y"] - top["y"])
+                        / (bottom["y"] - top["y"])
+                    )
+
+                    value = (
+                        top["value"]
+                        + fraction * (bottom["value"] - top["value"])
+                    )
+
+                result.append({
+                    "label": label["text"],
+                    "value": round(value, 2),
                 })
 
-            numeric = text.replace(",", "").rstrip("%")
-            if re.fullmatch(r"-?\d+(?:\.\d+)?", numeric):
-                y_labels.append({
-                    "value": float(numeric),
-                    "y": box["y"] + box["height"] / 2,
+            if len(result) == len(point_nodes):
+                return result
+        # ---------------------------------------------------------
+    # 5. GENERAL VERTICAL BAR CHART EXTRACTION
+    # Match Data column -> Primary bar -> Label.
+    # Calibrate bar heights using Y-axis tick labels.
+    # ---------------------------------------------------------
+    data_columns = [
+        node for node in descendants
+        if node_name(node) == "data column"
+    ]
+
+    if data_columns:
+        ticks = [
+            {"value": item["numeric"], "y": item["cy"]}
+            for item in text_records
+            if item["numeric"] is not None
+        ]
+
+        ticks.sort(key=lambda item: item["y"])
+
+        if len(ticks) >= 2:
+            result = []
+
+            for column in sorted(
+                data_columns,
+                key=lambda n: (get_bbox(n) or {}).get("x", 0)
+            ):
+                column_id = str(column.get("id"))
+                column_children = descendants_of(column_id)
+
+                bar = next(
+                    (
+                        n for n in column_children
+                        if node_name(n) == "primary bar"
+                        and node_type(n) == "RECTANGLE"
+                    ),
+                    None,
+                )
+
+                label_node = next(
+                    (
+                        n for n in column_children
+                        if node_type(n) == "TEXT"
+                        and node_name(n) == "label"
+                        and text_of(n)
+                    ),
+                    None,
+                )
+
+                if not bar or not label_node:
+                    continue
+
+                bar_box = get_bbox(bar)
+                if not bar_box:
+                    continue
+
+                bar_top = bar_box["y"]
+                value = None
+
+                for upper, lower in zip(ticks, ticks[1:]):
+                    if upper["y"] <= bar_top <= lower["y"]:
+                        distance = lower["y"] - upper["y"]
+
+                        if distance > 0:
+                            fraction = (
+                                (bar_top - upper["y"]) / distance
+                            )
+                            value = (
+                                upper["value"]
+                                + fraction * (
+                                    lower["value"] - upper["value"]
+                                )
+                            )
+                        break
+
+                if value is not None:
+                    result.append({
+                        "label": text_of(label_node),
+                        "value": round(value, 2),
+                        "valueSource": "estimated_from_geometry",
+                        "isEstimated": True,
+                    })
+
+            if result:
+                return result
+    # ---------------------------------------------------------
+    # 5. GENERIC FALLBACK
+    # Retain the previous same-row extraction for other charts.
+    # ---------------------------------------------------------
+    numeric_records = [
+        item for item in text_records
+        if item["numeric"] is not None
+    ]
+
+    if numeric_records:
+        label_records = [
+            item for item in text_records
+            if item["numeric"] is None
+        ]
+
+        tolerance = max(
+            8.0,
+            (
+                sum(item["height"] for item in text_records)
+                / max(1, len(text_records))
+            ) * 0.8
+        )
+
+        rows = _cluster_text_rows(text_records, tolerance)
+        paired = []
+
+        for row in rows:
+            labels = [
+                item for item in row["items"]
+                if item["numeric"] is None
+            ]
+            values = [
+                item for item in row["items"]
+                if item["numeric"] is not None
+            ]
+
+            if not labels or not values:
+                continue
+
+            for value_item in values:
+                preceding = [
+                    item for item in labels
+                    if item["x"] <= value_item["x"]
+                ]
+
+                label_item = (
+                    max(preceding, key=lambda item: item["x"])
+                    if preceding
+                    else min(
+                        labels,
+                        key=lambda item: abs(
+                            item["x"] - value_item["x"]
+                        )
+                    )
+                )
+
+                paired.append({
+                    "label": label_item["text"],
+                    "value": round(
+                        float(value_item["numeric"]), 4
+                    ),
                 })
 
-    points.sort(key=lambda item: item["x"])
-    x_labels.sort(key=lambda item: item["x"])
-    y_labels.sort(key=lambda item: item["y"])
+        unique = []
+        seen = set()
 
-    # Calculate values only when the points, week labels, and axis
-    # labels all belong to the component identified by candidate_id.
-    if (
-        len(points) >= 3
-        and len(points) == len(x_labels)
-        and len(y_labels) >= 2
-    ):
-        result = []
+        for item in paired:
+            key = (item["label"], item["value"])
+            if key not in seen:
+                seen.add(key)
+                unique.append(item)
 
-        for point, label in zip(points, x_labels):
-            above = [
-                axis for axis in y_labels
-                if axis["y"] <= point["y"]
-            ]
-            below = [
-                axis for axis in y_labels
-                if axis["y"] >= point["y"]
-            ]
+        if unique:
+            return unique
 
-            if not above or not below:
-                result = []
-                break
+    return []
 
-            top = above[-1]
-            bottom = below[0]
 
-            if abs(bottom["y"] - top["y"]) < 0.001:
-                value = top["value"]
-            else:
-                fraction = (
-                    (point["y"] - top["y"])
-                    / (bottom["y"] - top["y"])
-                )
-                value = top["value"] + fraction * (
-                    bottom["value"] - top["value"]
-                )
 
-            result.append({
-                "label": label["label"],
-                "value": round(value, 2),
+def extract_chart_text(
+    component: Dict[str, Any],
+    source_nodes,
+) -> Dict[str, Any]:
+    """Extract chart title and text labels from Figma nodes."""
+
+    if isinstance(source_nodes, dict):
+        node_list = list(source_nodes.values())
+    else:
+        node_list = list(source_nodes or [])
+
+    candidate_id = str(component.get("candidate_id", ""))
+
+    node_by_id = {
+        str(node.get("id")): node
+        for node in node_list
+        if isinstance(node, dict) and node.get("id") is not None
+    }
+
+    chart_node = node_by_id.get(candidate_id)
+
+    if not chart_node:
+        return {"title": "", "labels": []}
+
+    def text_of(node):
+        if str(node.get("type", "")).upper() != "TEXT":
+            return ""
+
+        return str(
+            node.get("text") or node.get("characters") or ""
+        ).strip()
+
+    def bbox(node):
+        box = get_bbox(node)
+        if box:
+            return (
+                box["x"],
+                box["y"],
+                box["width"],
+                box["height"],
+            )
+
+        try:
+            x = float(node.get("x", 0))
+            y = float(node.get("y", 0))
+            w = float(node.get("width", 0))
+            h = float(node.get("height", 0))
+
+            if w > 0 and h > 0:
+                return x, y, w, h
+        except (TypeError, ValueError):
+            pass
+
+        return None
+
+    children = {}
+
+    for node in node_list:
+        if not isinstance(node, dict):
+            continue
+
+        parent_id = node.get("parent_id")
+
+        if parent_id is not None:
+            children.setdefault(str(parent_id), []).append(node)
+
+    labels = []
+    seen = set()
+
+    def add_label(node, source):
+        text = text_of(node)
+
+        if not text or text in seen:
+            return
+
+        seen.add(text)
+        box = bbox(node)
+
+        labels.append({
+            "text": text,
+            "x": box[0] if box else None,
+            "y": box[1] if box else None,
+            "source": source,
+        })
+
+    # Collect all descendant text nodes.
+    stack = list(children.get(candidate_id, []))
+    visited = set()
+
+    while stack:
+        node = stack.pop()
+        node_id = str(node.get("id", ""))
+
+        if node_id in visited:
+            continue
+
+        visited.add(node_id)
+        add_label(node, "descendant")
+        stack.extend(children.get(node_id, []))
+
+    # Include nearby text siblings above the chart, if present.
+    chart_box = bbox(chart_node)
+
+    if chart_box:
+        cx, cy, cw, ch = chart_box
+        parent_id = chart_node.get("parent_id")
+
+        for sibling in children.get(str(parent_id), []):
+            if str(sibling.get("id")) == candidate_id:
+                continue
+
+            text = text_of(sibling)
+            sibling_box = bbox(sibling)
+
+            if not text or not sibling_box:
+                continue
+
+            sx, sy, sw, sh = sibling_box
+
+            overlaps = sx < cx + cw and sx + sw > cx
+            above_chart = sy + sh <= cy + 2
+            close_enough = cy - (sy + sh) <= max(100, ch * 0.20)
+
+            if overlaps and above_chart and close_enough:
+                add_label(sibling, "nearby_sibling")
+
+    # The chart's own component name is a useful fallback.
+    title = ""
+
+    for item in labels:
+        text = item["text"]
+
+        if (
+            item["source"] == "nearby_sibling"
+            and len(text) > 2
+            and not re.fullmatch(r"[\d.,%kKmMbB$ -]+", text)
+        ):
+            title = text
+            break
+
+    return {
+        "title": title,
+        "labels": labels,
+    }
+
+
+
+
+
+def extract_table_data(component: Dict[str, Any], source_nodes) -> Dict[str, Any]:
+    """
+    Extract nested table/list rows from Figma frames.
+    Preserves text values and bar geometry.
+    """
+    candidate_id = str(component.get("candidate_id", ""))
+    descendants = get_component_descendants(candidate_id, source_nodes)
+
+    records = []
+
+    # Find individual row frames.
+    for node in descendants:
+        if str(node.get("type", "")).upper() != "FRAME":
+            continue
+
+        row_id = str(node.get("id"))
+        row_box = get_bbox(node)
+
+        if not row_box:
+            continue
+
+        # Avoid treating large containers as data rows.
+        if row_box["height"] > 60:
+            continue
+
+        row_nodes = get_component_descendants(row_id, source_nodes)
+
+        text_nodes = [
+            n for n in row_nodes
+            if str(n.get("type", "")).upper() == "TEXT"
+            and _node_text(n).strip()
+        ]
+
+        values = [
+            {
+                "text": _node_text(n).strip(),
+                "x": (get_bbox(n) or {}).get("x", 0),
+            }
+            for n in text_nodes
+        ]
+
+        rank = next(
+            (v["text"] for v in values
+             if re.fullmatch(r"\d{1,3}", v["text"])),
+            None
+        )
+
+        spend = next(
+            (v["text"] for v in values
+             if re.fullmatch(
+                 r"[$€£₹]\s*[\d,]+(?:\.\d+)?",
+                 v["text"]
+             )),
+            None
+        )
+
+        product = next(
+            (
+                v["text"] for v in values
+                if v["text"] != rank
+                and v["text"] != spend
+                and not re.fullmatch(r"[\d.,% -]+", v["text"])
+            ),
+            None
+        )
+
+        if not (rank and product and spend):
+            continue
+
+        # Identify foreground/background bar rectangles.
+        rectangles = [
+            n for n in row_nodes
+            if str(n.get("type", "")).upper() == "RECTANGLE"
+            and get_bbox(n)
+        ]
+
+        widths = sorted(
+            [get_bbox(n)["width"] for n in rectangles],
+            reverse=True
+        )
+
+        foreground_width = widths[-1] if len(widths) >= 2 else None
+        background_width = widths[0] if widths else None
+
+        bar_percentage = None
+        if background_width and foreground_width is not None:
+            bar_percentage = round(
+                foreground_width / background_width * 100, 2
+            )
+
+        amount_match = re.search(
+            r"[\d,]+(?:\.\d+)?",
+            spend
+        )
+        amount = (
+            float(amount_match.group().replace(",", ""))
+            if amount_match else None
+        )
+
+        records.append({
+            "rank": rank,
+            "label": product,
+            "value": amount,
+            "displayValue": spend,
+            "barWidth": foreground_width,
+            "backgroundWidth": background_width,
+            "barPercentage": bar_percentage,
+            "valueSource": "figma_text",
+        })
+
+    # Keep original ranking order.
+    records.sort(key=lambda item: int(item["rank"]))
+
+    if records:
+        return {
+            "columns": ["Rank", "Drug", "Spend"],
+            "rows": [
+                [r["rank"], r["label"], r["displayValue"]]
+                for r in records
+            ],
+            "records": records,
+            "extractionConfidence": "high",
+        }
+
+    # Fallback: spatial text extraction for conventional tables.
+    text_records = []
+
+    for node in descendants:
+        if str(node.get("type", "")).upper() != "TEXT":
+            continue
+
+        text = _node_text(node)
+        box = get_bbox(node)
+
+        if text and box:
+            text_records.append({
+                "text": text,
+                "x": box["x"],
+                "y": box["y"],
+                "height": box["height"],
             })
 
-        if len(result) == len(points):
-            return result
+    if not text_records:
+        return {
+            "columns": [],
+            "rows": [],
+            "records": [],
+            "extractionConfidence": "none",
+        }
 
-    # Conservative fallback: do not infer values from arbitrary text.
-    return []
+    avg_height = sum(r["height"] for r in text_records) / len(text_records)
+    grouped = _cluster_text_rows(
+        text_records,
+        max(5.0, avg_height * 0.65)
+    )
+
+    matrix = [
+        [item["text"] for item in row["items"]]
+        for row in grouped
+        if row["items"]
+    ]
+
+    if len(matrix) < 2 or max(map(len, matrix), default=0) < 2:
+        return {
+            "columns": [],
+            "rows": [],
+            "records": [],
+            "extractionConfidence": "low",
+        }
+
+    columns = matrix[0]
+    rows = [
+        (row + [""] * len(columns))[:len(columns)]
+        for row in matrix[1:]
+    ]
+
+    return {
+        "columns": columns,
+        "rows": rows,
+        "records": [],
+        "extractionConfidence": "heuristic",
+    }
 
 
 
@@ -707,10 +1632,16 @@ def make_vista_widget(
     source_nodes: Optional[List[Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
     """
-    Construct a Vista widget with KPI labels, main values,
-    supporting descriptions, trends, and chart/table configuration.
+    Construct a Vista widget with KPI labels, values, chart data,
+    supporting descriptions, trends, and table configuration.
     """
     ctype = component["predicted_type"]
+
+    # Normalize the node collection for both extraction functions.
+    if isinstance(source_nodes, dict):
+        node_list = list(source_nodes.values())
+    else:
+        node_list = list(source_nodes or [])
 
     texts = [
         str(v).strip()
@@ -720,11 +1651,10 @@ def make_vista_widget(
 
     name = str(component.get("name", ""))
     name_lower = name.lower()
-    text_lower = " ".join(texts).lower()
 
     ignored_labels = {
         "show all", "%", "vs. prior period", "vs last mo",
-        "kpi card", "chart", "table", "other"
+        "kpi card", "chart", "table", "other",
     }
 
     meaningful_texts = [
@@ -736,24 +1666,83 @@ def make_vista_widget(
 
     title = name
     if not title or title.startswith("4:"):
-        title = meaningful_texts[0] if meaningful_texts else "Dashboard Widget"
+        title = (
+            meaningful_texts[0]
+            if meaningful_texts
+            else "Dashboard Widget"
+        )
 
-    semantic_label = meaningful_texts[-1] if meaningful_texts else title
+    semantic_label = (
+        meaningful_texts[-1] if meaningful_texts else title
+    )
 
     widget_uuid = str(uuid.uuid4())
-    chart_data = extract_chart_data(
-    prediction,
-    source_nodes=source_nodes or [],
-    component=component,
+
+    # Extract chart labels and heading first.
+    chart_text = (
+        extract_chart_text(component, node_list)
+        if ctype == "CHART"
+        else {"title": "", "labels": []}
     )
+
+    if chart_text.get("title"):
+        title = chart_text["title"]
+
+    # Use one reusable extractor for all chart types. It traverses all
+    # descendants and only emits values supported by explicit text or calibrated geometry.
+    if str(component.get("candidate_id")) in ["178:1244", "178:1273"]:
+        print("\n========== RUNTIME CHART INSPECTION ==========")
+        print("COMPONENT:", component.get("name"))
+        print("ID:", component.get("candidate_id"))
+
+        descendants = get_component_descendants(
+            str(component.get("candidate_id")),
+            node_list
+        )
+
+        for node in descendants:
+            box = get_bbox(node)
+            print({
+                "id": node.get("id"),
+                "name": node.get("name"),
+                "type": node.get("type"),
+                "text": _node_text(node) if node.get("type") == "TEXT" else "",
+                "bbox": box
+            })
+
+        print("========== END INSPECTION ==========\n")
+    
+    chart_data = (
+        extract_chart_data(
+            prediction,
+            source_nodes=node_list,
+            component=component,
+        )
+        if ctype == "CHART"
+        else []
+    )
+
+    if ctype == "CHART":
+        print(
+            "[CHART DEBUG]",
+            "candidate_id =", component.get("candidate_id"),
+            "source_nodes_type =", type(source_nodes).__name__,
+            "source_nodes_count =", len(node_list),
+            "chart_text_count =", len(chart_text.get("labels", [])),
+            "chart_data_count =", len(chart_data),
+            "chart_data =", chart_data,
+        )
 
     # Determine Vista widget type.
     if ctype == "CHART":
-        if any(word in name_lower for word in ("donut", "doughnut", "pie")):
+        chart_description = name_lower + " " + title.lower()
+        if any(word in chart_description for word in ("donut", "doughnut", "pie")):
             vista_type = "doughnut2d"
-        elif "bar" in name_lower or "horizontal" in name_lower:
+        elif any(word in chart_description for word in ("bar", "horizontal")):
             vista_type = "bar2d"
         else:
+            # Heatmaps, line charts and other unsupported source types retain a
+            # safe generic Vista chart type until a matching Vista renderer exists.
             vista_type = "column2d"
     elif ctype == "KPI_CARD":
         vista_type = "column2d"
@@ -773,7 +1762,9 @@ def make_vista_widget(
         "semanticLabel": semantic_label,
         "sourceComponentId": component["candidate_id"],
         "grid": component["grid"],
-        "position": component.get("position_relative_to_dashboard", {}),
+        "position": component.get(
+            "position_relative_to_dashboard", {}
+        ),
         "text": texts,
         "needsReview": False,
     }
@@ -781,9 +1772,13 @@ def make_vista_widget(
     # Chart configuration.
     if ctype == "CHART":
         widget["chartData"] = chart_data
+        widget["chartText"] = chart_text.get("labels", [])
+
         widget["chart"] = {
             "showValues": "1",
-            "showLegend": "1" if len(chart_data) > 3 else "0",
+            "showLegend": (
+                "1" if len(chart_data) > 3 else "0"
+            ),
             "theme": "fusion,evernorth-light",
             "caption": title,
         }
@@ -801,11 +1796,10 @@ def make_vista_widget(
         else:
             widget["needsReview"] = True
             widget["chartDataWarning"] = (
-                "Could not extract chart data from source text"
+                "Could not extract chart data from source geometry"
             )
 
     # KPI extraction and annotations.
-    
     elif ctype == "KPI_CARD":
         numeric_texts = [
             t for t in texts if re.search(r"\d", t)
@@ -821,11 +1815,9 @@ def make_vista_widget(
             if re.match(r"^[+\-]\s*\d", s):
                 return True
 
-            # Handles Unicode arrows and common mojibake forms.
-            if s.startswith(("↑", "↓", "↗", "↘", "â†", "â‡")):
-                return True
-
-            return False
+            return s.startswith(
+                ("↑", "↓", "↗", "↘", "â†", "â‡")
+            )
 
         trend_candidates = [
             t for t in numeric_texts if is_trend_text(t)
@@ -834,7 +1826,10 @@ def make_vista_widget(
             t for t in numeric_texts if not is_trend_text(t)
         ]
 
-        numeric_val = metric_candidates[-1] if metric_candidates else "—"
+        # Select the primary KPI metric, not the supporting description.
+        numeric_val = (
+            metric_candidates[0] if metric_candidates else "—"
+        )
 
         nonnumeric_texts = [
             t for t in texts
@@ -844,11 +1839,20 @@ def make_vista_widget(
             and t.lower() not in {"show all", "vs last mo"}
         ]
 
-        metric_lbl = nonnumeric_texts[-1] if nonnumeric_texts else title
+        # Select the primary KPI label, not the supporting description.
+        metric_lbl = (
+            nonnumeric_texts[0] if nonnumeric_texts else title
+        )
+        trend_lbl = (
+            trend_candidates[0] if trend_candidates else ""
+        )
 
-        trend_lbl = trend_candidates[0] if trend_candidates else ""
         comparison = next(
-            (t for t in texts if "vs" in t.lower() or "prior period" in t.lower()),
+            (
+                t for t in texts
+                if "vs" in t.lower()
+                or "prior period" in t.lower()
+            ),
             "",
         )
 
@@ -859,10 +1863,12 @@ def make_vista_widget(
         widget["kpiLabel"] = metric_lbl
         widget["trend"] = trend_lbl
 
-    
-
-        trend_is_positive = trend_lbl.strip().startswith(("+", "↑", "↗", "â†‘"))
-        trend_is_negative = trend_lbl.strip().startswith(("-", "−", "↓", "↘", "â†“"))
+        trend_is_positive = trend_lbl.strip().startswith(
+            ("+", "↑", "↗", "â†‘")
+        )
+        trend_is_negative = trend_lbl.strip().startswith(
+            ("-", "−", "↓", "↘", "â†“")
+        )
 
         trend_color = (
             "#16a34a" if trend_is_positive
@@ -880,10 +1886,12 @@ def make_vista_widget(
             "plotHoverEffect": "0",
             "theme": "fusion,evernorth-light",
         }
+
         supporting_text = (
             str(widget.get("supportingText", "")).strip()
             or str(widget.get("description", "")).strip()
         )
+
         annotation_items = [
             {
                 "id": "lbl-1",
@@ -899,7 +1907,7 @@ def make_vista_widget(
                 "text": numeric_val,
                 "x": "$chartCenterX",
                 "y": "$chartTopMargin+58",
-                "fontSize": "26",
+                "fontSize": "36",
                 "bold": "1",
             },
         ]
@@ -953,19 +1961,31 @@ def make_vista_widget(
         if numeric_val == "—" or not metric_lbl:
             widget["needsReview"] = True
 
-    # Table configuration.
+    # Table configuration reconstructed from descendant text geometry.
     elif ctype == "TABLE":
-        headers = [
-            t for t in texts[:6] if len(t) < 30
-        ]
+        table_data = extract_table_data(component, node_list)
+
+        print("\n[TABLE RUNTIME DEBUG]")
+        print("COMPONENT:", component)
+        print("RECORD COUNT:", len(table_data.get("records", [])))
+        print("RECORDS:", table_data.get("records", []))
 
         widget["tableConfig"] = {
-            "columns": headers if headers else [
-                "Column 1", "Column 2", "Status"
-            ],
-            "rows": [],
+            "columns": table_data["columns"],
+            "rows": table_data["rows"],
+            "records": table_data.get("records", []),
         }
-        widget["needsReview"] = True
+
+        if not table_data["columns"] or not table_data["rows"]:
+            widget["needsReview"] = True
+            widget["tableDataWarning"] = (
+                "Could not reliably reconstruct table headers and rows from source nodes"
+            )
+        elif table_data.get("extractionConfidence") != "high":
+            widget["needsReview"] = True
+            widget["tableDataWarning"] = (
+                "Table rows were reconstructed heuristically; verify column alignment"
+            )
 
     return widget
 

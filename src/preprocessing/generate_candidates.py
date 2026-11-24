@@ -66,7 +66,7 @@ UI_WORDS = (
 # intentionally target panel-level containers, not individual controls.
 PANEL_NAME_ALIASES = {
     "header", "page header", "dashboard header", "main header",
-    "navbar", "nav bar", "navigation bar", "navigation panel",
+    "navbar", "nav bar","navigation", "navigation bar", "navigation panel",
     "sidebar", "side bar", "side navigation", "side nav",
     "left sidebar", "main sidebar", "topbar", "top bar",
     "filter", "filters", "filter panel", "filters panel",
@@ -603,6 +603,16 @@ def is_component_candidate(node, info):
     strong = strong_component_signal(node, info)
     candidate_score = score(node, info)
 
+    # Text-based KPI cards with a label, value, and supporting context.
+    if (
+        info["area"] >= 20000
+        and info["text_count"] >= 3
+        and info["numeric_count"] >= 1
+        and info["graphic_count"] == 0
+        and info["direct_container_count"] == 0
+    ):
+        return True
+
     # Explicitly named KPI cards.
     if name.startswith(("kpi", "metric")) and info["area"] >= 4000:
         return True
@@ -791,11 +801,12 @@ def remove_nested(candidates, node_map, children):
         ):
             kept.append(candidate)
             continue
-
-        if is_internal(node_map[cid]):
+        # Preserve explicitly named panel candidates.
+        if is_panel_candidate_name(node_map[cid]):
+            kept.append(candidate)
             continue
-
-        # Preserve meaningful children rather than a wrapper around them.
+        # Preserve explicitly named panel candidates.
+        # apper around them.
         if (
             child_info["area"] >= max(12000, parent_info["area"] * 0.18)
             or (

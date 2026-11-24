@@ -458,6 +458,7 @@ def main():
             "|", item["predicted_type"],
             "|", item["grid"],
         )
+        
 
 
 if __name__ == "__main__":
