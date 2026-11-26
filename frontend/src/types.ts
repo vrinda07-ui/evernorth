@@ -19,7 +19,7 @@ export interface CandidateComponent {
 }
 
 export interface PredictedComponent extends CandidateComponent {
-  predicted_type: 'CHART' | 'KPI_CARD' | 'TABLE' | 'FILTER' | 'HEADER' | 'OTHER'
+  predicted_type: 'CHART' | 'KPI_CARD' | 'TABLE' | 'FILTER' | 'HEADER' | 'SIDEBAR' | 'OTHER'
   confidence?: number
 }
 
@@ -56,6 +56,9 @@ export interface VistaWidget {
   position?: AbsolutePosition
   text?: string[]
   chartData?: Array<{ label: string; value: number }>
+  chartText?: string[]
+  chartDataWarning?: string
+  tableDataWarning?: string
 
   // KPI content
   kpiValue?: string
@@ -64,13 +67,14 @@ export interface VistaWidget {
   trend?: string
 
   needsReview?: boolean
-  chart?: Record<string, any>
-  annotations?: Record<string, any>
-  dataRequest?: Record<string, any>
+  chart?: Record<string, unknown>
+  annotations?: Record<string, unknown>
+  dataRequest?: Record<string, unknown>
 
   tableConfig?: {
     columns: string[]
-    rows?: any[]
+    rows?: unknown[]
+    records?: Array<Record<string, unknown>>
   }
 }
 
@@ -96,7 +100,7 @@ export interface VistaPageJson {
   }
   tiles: VistaTile[]
   widgets: VistaWidget[]
-  backgroundPaths?: any[]
+  backgroundPaths?: unknown[]
   validation: {
     componentCount: number
     widgetCount: number
@@ -174,17 +178,7 @@ export interface PipelineResult {
   runId?: string
 }
 
-export interface DesignSummary {
-  id: string
-  name: string
-  subtitle: string
-  status: string
-  statusColor?: 'green' | 'orange' | 'red'
-  tiles: number
-  lastRun: string
-  isSample?: boolean
-  filePath?: string
-}
+export type StorageBackend = 'mongodb' | 'file'
 
 export interface BackendStatus {
   status: string
@@ -194,8 +188,35 @@ export interface BackendStatus {
   pipelineStages: string[]
   pluginDataReceived: boolean
   designName: string | null
+  storage?: { backend: StorageBackend; healthy: boolean }
+  maxUploadMb?: number
   timestamp: number
 }
+
+export interface LoadedDesign {
+  documentName: string
+  nodeCount: number
+  dimensions: { width: number; height: number }
+  figmaJson: unknown
+  /** Server-side workspace for this design; sent with every pipeline stage. */
+  designId?: string
+  /** Import code from the Figma plugin, when the design was loaded with one. */
+  importCode?: string
+  filename?: string
+  source: 'plugin' | 'upload'
+}
+
+export interface LayoutResult {
+  success: boolean
+  stage: 'generate-layout'
+  runId: string
+  saved: boolean
+  gridLayout: PipelineResult['gridLayout']
+  pageJson: VistaPageJson
+  stats: { widgets: number; tiles: number; needAttention: number }
+}
+
+export type JsonType = 'figma_data' | 'raw_predictions' | 'clean_predictions' | 'grid_layout' | 'page_json'
 
 export interface HistoryEntry {
   runId: string
@@ -206,14 +227,15 @@ export interface HistoryEntry {
   tileCount: number
   needAttention: number
   status: string
+  packageDetails?: Partial<PackageDetails> | null
+}
+
+export interface HistoryList {
+  runs: HistoryEntry[]
+  total: number
+  storage: StorageBackend
 }
 
 export interface HistoryRunDetails extends HistoryEntry {
-  availableOutputs: {
-    figma_data: boolean
-    raw_predictions: boolean
-    clean_predictions: boolean
-    grid_layout: boolean
-    page_json: boolean
-  }
+  availableOutputs: Record<JsonType, boolean>
 }
