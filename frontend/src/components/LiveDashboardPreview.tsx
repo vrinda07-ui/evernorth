@@ -13,6 +13,7 @@ interface LiveDashboardPreviewProps {
   sourceLabel?: string
   onViewJson?: () => void
   onDownload?: () => void
+  onRefresh?: () => void
 }
 
 export const LiveDashboardPreview: React.FC<LiveDashboardPreviewProps> = ({ pageJson, sourceLabel, onViewJson, onDownload }) => {
