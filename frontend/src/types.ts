@@ -239,3 +239,13 @@ export interface HistoryList {
 export interface HistoryRunDetails extends HistoryEntry {
   availableOutputs: Record<JsonType, boolean>
 }
+
+/** Legacy gallery model retained for the existing designs gallery component. */
+export interface DesignSummary {
+  id: string
+  name: string
+  subtitle: string
+  status: string
+  tiles: number
+  lastRun: string
+}
