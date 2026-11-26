@@ -1,29 +1,45 @@
 import React from 'react'
-import { ExternalLink, RefreshCw, Layers } from 'lucide-react'
-import { VistaPageJson, VistaWidget } from '../types'
+import { ArrowLeft, Clock, Download, ExternalLink, Eye, Layers } from 'lucide-react'
+import { VistaPageJson } from '../types'
+import { routeHref } from '../hooks/useHashRoute'
 import { AbsoluteLayoutViewer } from './AbsoluteLayoutViewer'
+import { Badge } from './ui/Badge'
+import { Button, buttonClasses } from './ui/Button'
+import { EmptyState } from './ui/EmptyState'
+import { Card } from './ui/Card'
 
 interface LiveDashboardPreviewProps {
   pageJson: VistaPageJson | null
-  onRefresh?: () => void
+  sourceLabel?: string
+  onViewJson?: () => void
+  onDownload?: () => void
 }
 
-export const LiveDashboardPreview: React.FC<LiveDashboardPreviewProps> = ({
-  pageJson,
-  onRefresh,
-}) => {
+export const LiveDashboardPreview: React.FC<LiveDashboardPreviewProps> = ({ pageJson, sourceLabel, onViewJson, onDownload }) => {
   if (!pageJson || !pageJson.widgets || pageJson.widgets.length === 0) {
     return (
-      <div className="bg-white border border-slate-200 rounded-xl p-12 text-center">
-        <Layers className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-        <h3 className="font-heading font-semibold text-slate-800 text-base">No dashboard generated yet</h3>
-        <p className="text-sm text-slate-500 mt-1">Upload a Figma design or select an existing design to preview the dashboard.</p>
-      </div>
+      <Card>
+        <EmptyState
+          icon={Layers}
+          title="No dashboard to preview yet"
+          description="Run the pipeline in the workspace, or open a saved analysis, and the generated layout will appear here."
+          action={
+            <>
+              <a href={routeHref('workspace')} className={buttonClasses('primary')}>
+                <ArrowLeft aria-hidden className="size-4" />
+                Go to workspace
+              </a>
+              <a href={routeHref('history')} className={buttonClasses('secondary')}>
+                <Clock aria-hidden className="size-4" />
+                Saved analyses
+              </a>
+            </>
+          }
+        />
+      </Card>
     )
   }
 
-  const widgets = pageJson.widgets
-  const tiles = pageJson.tiles
   const dashboardSize = {
     width: pageJson.dashboard?.sourceWidth || 1440,
     height: pageJson.dashboard?.sourceHeight || 1024,
@@ -31,52 +47,47 @@ export const LiveDashboardPreview: React.FC<LiveDashboardPreviewProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Preview Header */}
-      <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <h2 className="font-heading text-xl font-bold text-slate-900">
-              {pageJson.title || 'Generated Dashboard'}
-            </h2>
-            <span className="px-2 py-0.5 text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 rounded">
-              Figma Geometry
-            </span>
+      <Card className="flex flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="truncate text-xl font-bold">{pageJson.title || 'Generated dashboard'}</h2>
+            {sourceLabel && <Badge tone="success">{sourceLabel}</Badge>}
           </div>
-          <div className="flex items-center gap-4 text-xs text-slate-500 mt-1 font-mono">
-            <span>Slide ID: {pageJson.slideId}</span>
-            <span>Content ID: {pageJson.contentId}</span>
-            <span>{widgets.length} widgets</span>
-          </div>
+          <dl className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm text-teal-600">
+            <div className="flex gap-1.5">
+              <dt>Slide ID</dt>
+              <dd className="font-mono font-medium text-ink">{pageJson.slideId}</dd>
+            </div>
+            <div className="flex gap-1.5">
+              <dt>Widgets</dt>
+              <dd className="font-medium text-ink">{pageJson.widgets.length}</dd>
+            </div>
+            <div className="flex gap-1.5">
+              <dt>Need review</dt>
+              <dd className="font-medium text-ink">{pageJson.validation?.reviewRequired ?? 0}</dd>
+            </div>
+          </dl>
         </div>
-
-        <div className="flex items-center gap-2">
-          {onRefresh && (
-            <button
-              onClick={onRefresh}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg shadow-2xs transition"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              Refresh
-            </button>
+        <div className="flex flex-wrap gap-2">
+          {onViewJson && (
+            <Button variant="secondary" icon={<Eye className="size-4" />} onClick={onViewJson}>
+              View JSON
+            </Button>
           )}
-          <a
-            href="/dashboard_preview.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-xs transition"
-          >
-            <ExternalLink className="w-3.5 h-3.5" />
-            Standalone Vista Preview
+          {onDownload && (
+            <Button variant="secondary" icon={<Download className="size-4" />} onClick={onDownload}>
+              Download
+            </Button>
+          )}
+          <a href="/dashboard_preview.html" target="_blank" rel="noopener noreferrer" className={buttonClasses('dark')}>
+            <ExternalLink aria-hidden className="size-4" />
+            Standalone preview
+            <span className="sr-only">(opens in a new tab)</span>
           </a>
         </div>
-      </div>
+      </Card>
 
-      {/* Absolute Layout Viewer */}
-      <AbsoluteLayoutViewer
-        tiles={tiles}
-        widgets={widgets}
-        dashboardSize={dashboardSize}
-      />
+      <AbsoluteLayoutViewer tiles={pageJson.tiles} widgets={pageJson.widgets} dashboardSize={dashboardSize} />
     </div>
   )
 }
