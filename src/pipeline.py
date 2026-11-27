@@ -54,6 +54,28 @@ GRID_COLUMNS = 12
 GRID_ROWS = 12
 
 
+def load_model() -> XGBClassifier:
+    """Load and validate the existing XGBoost model and label encoder."""
+    if not MODEL_FILE.is_file():
+        raise FileNotFoundError(f"Trained XGBoost model not found at {MODEL_FILE}")
+    if not ENCODER_FILE.is_file():
+        raise FileNotFoundError(f"Label encoder not found at {ENCODER_FILE}")
+
+    model = XGBClassifier()
+    model.load_model(str(MODEL_FILE))
+    # Loading the encoder here validates that the paired artifact is readable.
+    joblib.load(ENCODER_FILE)
+    return model
+
+
+def model_classes() -> List[str]:
+    """Return the class labels from the repository's existing label encoder."""
+    if not ENCODER_FILE.is_file():
+        raise FileNotFoundError(f"Label encoder not found at {ENCODER_FILE}")
+    encoder = joblib.load(ENCODER_FILE)
+    return [str(label) for label in encoder.classes_]
+
+
 def generate_short_id(length: int = 5) -> str:
     """Generate a clean 5-character alphanumeric ID, e.g. CR001."""
     chars = string.ascii_uppercase + string.digits

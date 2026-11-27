@@ -8,44 +8,62 @@
       font: 13px sans-serif;
       padding: 16px;
     }
+
     button {
       width: 100%;
       padding: 11px;
       margin-top: 10px;
       cursor: pointer;
     }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
     #status {
       margin-top: 14px;
       overflow-wrap: anywhere;
+      white-space: pre-wrap;
     }
   </style>
 </head>
+
 <body>
   <h3>Figma Dashboard Generator</h3>
   <p>Send the current Figma page to your local Python pipeline.</p>
+
   <button id="send">Send current page</button>
   <div id="status">Ready.</div>
 
   <script>
-    const status = document.getElementById("status");
-    const button = document.getElementById("send");
+    
+const status = document.getElementById("status");
+const button = document.getElementById("send");
 
-    button.onclick = () => {
-      button.disabled = true;
-      status.textContent = "Reading design and sending to Python...";
-      parent.postMessage(
-        { pluginMessage: { type: "send-design" } },
-        "*"
-      );
-    };
+button.onclick = () => {
+  button.disabled = true;
+  status.textContent = "Sending design to Python...";
 
-    window.onmessage = (event) => {
-      const message = event.data.pluginMessage;
-      if (!message) return;
+  parent.postMessage({
+    pluginMessage: { type: "send-design" }
+  }, "*");
+};
 
-      status.textContent = message.text;
-      button.disabled = false;
-    };
+window.onmessage = (event) => {
+  const message = event.data.pluginMessage;
+  if (!message) return;
+
+  if (message.type === "status") {
+    status.textContent = message.text;
+  }
+
+  if (message.type === "result") {
+    status.textContent = message.text;
+    button.disabled = false;
+  }
+};
+
   </script>
 </body>
 </html>

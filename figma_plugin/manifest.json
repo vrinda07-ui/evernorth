@@ -8,9 +8,9 @@
   "editorType": ["figma"],
   "documentAccess": "dynamic-page",
   "networkAccess": {
-    "allowedDomains": ["none"],
-    "devAllowedDomains": [
-      "http://localhost:8000"
-    ]
+    "allowedDomains": [
+      "http://localhost:8765"
+    ],
+    "reasoning": "Connects to the local Python server to receive and process Figma design data."
   }
 }

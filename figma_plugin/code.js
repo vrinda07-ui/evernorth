@@ -20,16 +20,14 @@ function serializeNode(node) {
   if ("characters" in node) result.characters = node.characters;
   if ("fontSize" in node) result.fontSize = node.fontSize;
   if ("layoutMode" in node) result.layoutMode = node.layoutMode;
+
   try {
-  if ("componentProperties" in node) {
-    result.componentProperties = node.componentProperties;
+    if ("componentProperties" in node) {
+      result.componentProperties = node.componentProperties;
+    }
+  } catch (error) {
+    console.warn("Skipping component properties:", error);
   }
-} catch (error) {
-  console.warn(
-    `Skipping componentProperties for node ${node.name} (${node.id}):`,
-    error
-  );
-}
 
   if ("children" in node) {
     result.children = node.children.map(serializeNode);
@@ -42,7 +40,10 @@ figma.ui.onmessage = async (message) => {
   if (message.type !== "send-design") return;
 
   try {
-    figma.ui.postMessage({ text: "Extracting design..." });
+    figma.ui.postMessage({
+      type: "status",
+      text: "Extracting design..."
+    });
 
     const page = serializeNode(figma.currentPage);
 
@@ -57,8 +58,13 @@ figma.ui.onmessage = async (message) => {
       pageName: figma.currentPage.name
     };
 
+    figma.ui.postMessage({
+      type: "status",
+      text: "Sending to Python..."
+    });
+
     const response = await fetch(
-      "http://localhost:8000/ingest",
+      "http://localhost:8765/ingest",
       {
         method: "POST",
         headers: {
@@ -71,18 +77,19 @@ figma.ui.onmessage = async (message) => {
     const result = await response.json();
 
     if (!response.ok) {
-      throw new Error(result.detail || JSON.stringify(result));
+      throw new Error(
+        result.error || result.detail || JSON.stringify(result)
+      );
     }
 
     figma.ui.postMessage({
-      text:
-        "Success! Design processed.\n" +
-        "Widgets: " + result.widgets + "\n" +
-        "Tiles: " + result.tiles
+      type: "result",
+      text: result.message || "Design received successfully!"
     });
 
   } catch (error) {
     figma.ui.postMessage({
+      type: "result",
       text: "Failed: " + error.message
     });
   }

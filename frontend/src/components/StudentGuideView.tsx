@@ -1,133 +1,140 @@
 import React from 'react'
-import { BookOpen, CheckCircle, Code, Layers, Grid, FileJson } from 'lucide-react'
+import { CheckCircle2, FileJson, Grid3x3, Layers, Workflow } from 'lucide-react'
+import { Card, CardHeader } from './ui/Card'
+
+const COLUMN_RULES = [
+  { width: '~17%', cols: 2 },
+  { width: '~25%', cols: 3 },
+  { width: '~33%', cols: 4 },
+  { width: '~50%', cols: 6 },
+]
+
+const WIDGET_MAPPING = [
+  { element: 'KPI stat card / metric', widget: 'column2d', config: 'Annotation group with text labels and bold values' },
+  { element: 'Bar / column chart', widget: 'column2d / bar2d', config: 'showValues: 1 and the configured chart theme' },
+  { element: 'Pie / donut chart', widget: 'doughnut2d / pie2d', config: 'doughnutRadius: 55%, pieRadius: 85%' },
+  { element: 'Data table', widget: 'table', config: 'tableConfig with column definitions' },
+  { element: 'Insights / comments', widget: 'comment', config: 'headerText, bodyStyle, headerStyle' },
+]
+
+const VALIDATION_RULES = [
+  <><strong>contentId</strong> and <strong>slideId</strong> match and are exactly 5 letters or numbers (e.g. CR001).</>,
+  <><strong>pageId</strong>, <strong>tileId</strong> and <strong>widgetId</strong> are valid UUID v4 values.</>,
+  <>Every <strong>widgetId</strong> referenced by a tile exists in the widgets array.</>,
+  <>Column spans in each row add up to 12 without overlapping.</>,
+]
+
+const WORKFLOW = [
+  'Load a design from the Figma plugin or upload a JSON export.',
+  'Optionally set package details such as title and slide ID.',
+  'Run the four pipeline stages, or run them all at once.',
+  'Preview the layout, inspect components and download page.json.',
+  'Revisit any run later from Saved analyses.',
+]
 
 export const StudentGuideView: React.FC = () => {
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
-      {/* Header */}
-      <div className="border-b border-slate-200 pb-6">
-        <div className="flex items-center gap-2 text-blue-600 text-sm font-semibold mb-2">
-          <BookOpen className="w-4 h-4" />
-          <span>Vista Slide POC Guide</span>
-        </div>
-        <h1 className="font-heading text-3xl font-extrabold text-slate-900 tracking-tight">
-          Figma-to-Dashboard Generator Guide & Specification
-        </h1>
-        <p className="text-slate-600 mt-2 text-base">
-          Rule set, 12-column grid constraints, and widget architecture for generating valid Vista <code className="text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded font-mono text-sm">page.json</code> dashboard slides.
-        </p>
-      </div>
+    <div className="mx-auto max-w-5xl space-y-6 px-4 pb-16 sm:px-6 lg:px-8">
+      <Card className="p-5 sm:p-6">
+        <CardHeader
+          title={
+            <span className="flex items-center gap-2">
+              <Workflow aria-hidden className="size-5 text-teal-600" />
+              How Figma2Insight works
+            </span>
+          }
+        />
+        <ol className="stagger mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {WORKFLOW.map((step, i) => (
+            <li key={i} style={{ ['--i' as string]: i }} className="rounded-xl border border-teal-100 bg-teal-50/70 p-4">
+              <span className="grid size-7 place-items-center rounded-full bg-ink text-xs font-bold text-aqua-400">{i + 1}</span>
+              <p className="mt-3 text-sm leading-relaxed text-teal-800">{step}</p>
+            </li>
+          ))}
+        </ol>
+      </Card>
 
-      {/* Grid Rules Card */}
-      <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-4">
-        <div className="flex items-center gap-2 font-heading font-bold text-lg text-slate-900">
-          <Grid className="w-5 h-5 text-blue-600" />
-          <h2>The 12-Column × 12-Row Grid Mapping</h2>
+      <Card className="p-5 sm:p-6">
+        <CardHeader
+          title={
+            <span className="flex items-center gap-2">
+              <Grid3x3 aria-hidden className="size-5 text-teal-600" />
+              The 12-column × 12-row grid
+            </span>
+          }
+          description="Every slide is 12 columns wide and 12 rows tall. Each horizontal row of tiles adds up to 12."
+        />
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {COLUMN_RULES.map((rule) => (
+            <div key={rule.cols} className="rounded-xl border border-teal-100 bg-white p-4 text-center">
+              <p className="text-sm font-semibold text-teal-600">{rule.width} width</p>
+              <p className="mt-1 font-heading text-2xl font-bold">{rule.cols} cols</p>
+              <div className="mt-3 grid grid-cols-12 gap-0.5" aria-hidden>
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <span key={i} className={i < rule.cols ? 'h-1.5 rounded-sm bg-aqua-500' : 'h-1.5 rounded-sm bg-teal-100'} />
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
-        <p className="text-sm text-slate-600">
-          The dashboard slide is always <strong>12 columns wide</strong> and <strong>12 rows tall</strong>. Every horizontal row of tiles must add up to <strong>12</strong>.
-        </p>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
-          <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
-            <div className="font-bold text-slate-900 text-sm">~17% Width</div>
-            <div className="text-blue-600 font-semibold mt-1">2 cols</div>
-          </div>
-          <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
-            <div className="font-bold text-slate-900 text-sm">~25% Width</div>
-            <div className="text-blue-600 font-semibold mt-1">3 cols</div>
-          </div>
-          <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
-            <div className="font-bold text-slate-900 text-sm">~33% Width</div>
-            <div className="text-blue-600 font-semibold mt-1">4 cols</div>
-          </div>
-          <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center">
-            <div className="font-bold text-slate-900 text-sm">~50% Width</div>
-            <div className="text-blue-600 font-semibold mt-1">6 cols</div>
-          </div>
-        </div>
-
-        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-900 flex items-center gap-2">
-          <CheckCircle className="w-4 h-4 text-blue-600 shrink-0" />
+        <p className="mt-4 flex items-start gap-2 rounded-xl border border-aqua-200 bg-aqua-50 p-3.5 text-sm text-aqua-800">
+          <CheckCircle2 aria-hidden className="mt-0.5 size-4 shrink-0" />
           <span>
-            <strong>Formula:</strong> Left Sidebar (2 cols) + Main Chart (8 cols) + Right Panel (2 cols) = <strong>12 ✅</strong>
+            <strong>Example:</strong> left sidebar (2) + main chart (8) + right panel (2) = 12.
           </span>
-        </div>
-      </div>
+        </p>
+      </Card>
 
-      {/* Widget Types Table */}
-      <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-xs space-y-4">
-        <div className="flex items-center gap-2 font-heading font-bold text-lg text-slate-900">
-          <Layers className="w-5 h-5 text-indigo-600" />
-          <h2>Figma Element → Vista Widget Mapping</h2>
+      <Card className="overflow-hidden">
+        <div className="p-5 sm:p-6">
+          <CardHeader
+            title={
+              <span className="flex items-center gap-2">
+                <Layers aria-hidden className="size-5 text-teal-600" />
+                Dashboard widget mapping
+              </span>
+            }
+          />
         </div>
-
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-200 text-left text-xs">
-            <thead className="bg-slate-50 text-slate-600 font-semibold">
+        <div className="overflow-x-auto scrollbar-thin">
+          <table className="w-full min-w-[36rem] text-left text-sm">
+            <caption className="sr-only">How Figma elements map to Dashboard widget types</caption>
+            <thead className="border-y border-teal-100 bg-teal-50 text-xs uppercase tracking-wider text-teal-600">
               <tr>
-                <th className="px-4 py-2.5">Figma UI Element</th>
-                <th className="px-4 py-2.5">Vista Widget Type</th>
-                <th className="px-4 py-2.5">Configuration & Key Properties</th>
+                <th scope="col" className="px-5 py-3 font-semibold sm:px-6">Figma element</th>
+                <th scope="col" className="px-5 py-3 font-semibold">Dashboard widget</th>
+                <th scope="col" className="px-5 py-3 font-semibold">Key configuration</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 font-mono">
-              <tr>
-                <td className="px-4 py-2.5 font-sans font-medium text-slate-900">KPI Stat Card / Metric</td>
-                <td className="px-4 py-2.5 text-blue-600 font-bold">column2d</td>
-                <td className="px-4 py-2.5 text-slate-600">annotations group with text labels and bold values</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2.5 font-sans font-medium text-slate-900">Bar / Column Chart</td>
-                <td className="px-4 py-2.5 text-blue-600 font-bold">column2d / bar2d</td>
-                <td className="px-4 py-2.5 text-slate-600">showValues: 1, theme: cigna-light / evernorth-light</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2.5 font-sans font-medium text-slate-900">Pie / Donut Chart</td>
-                <td className="px-4 py-2.5 text-blue-600 font-bold">doughnut2d / pie2d</td>
-                <td className="px-4 py-2.5 text-slate-600">doughnutRadius: 55%, pieRadius: 85%</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2.5 font-sans font-medium text-slate-900">Data Table</td>
-                <td className="px-4 py-2.5 text-blue-600 font-bold">table</td>
-                <td className="px-4 py-2.5 text-slate-600">tableConfig with column definitions</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2.5 font-sans font-medium text-slate-900">Insights / Comments</td>
-                <td className="px-4 py-2.5 text-blue-600 font-bold">comment</td>
-                <td className="px-4 py-2.5 text-slate-600">headerText, bodyStyle, headerStyle</td>
-              </tr>
+            <tbody className="divide-y divide-teal-100">
+              {WIDGET_MAPPING.map((row) => (
+                <tr key={row.element} className="transition-colors hover:bg-teal-50/60">
+                  <th scope="row" className="px-5 py-3 font-medium text-ink sm:px-6">{row.element}</th>
+                  <td className="px-5 py-3">
+                    <code className="rounded-md bg-ink px-2 py-0.5 font-mono text-xs text-aqua-300">{row.widget}</code>
+                  </td>
+                  <td className="px-5 py-3 text-teal-700">{row.config}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
-      </div>
+      </Card>
 
-      {/* Critical POC Checklist */}
-      <div className="bg-slate-900 text-slate-100 rounded-xl p-6 shadow-md space-y-4">
-        <div className="flex items-center gap-2 font-heading font-bold text-lg text-white">
-          <FileJson className="w-5 h-5 text-blue-400" />
-          <h2>Automated POC Validation Rules</h2>
-        </div>
-
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300">
-          <li className="flex items-start gap-2 bg-slate-800/60 p-2.5 rounded-lg border border-slate-700">
-            <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-            <span><strong>contentId</strong> &amp; <strong>slideId</strong> must match and be exactly 5 alphanumeric chars (e.g. CR001, EC001).</span>
-          </li>
-          <li className="flex items-start gap-2 bg-slate-800/60 p-2.5 rounded-lg border border-slate-700">
-            <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-            <span><strong>pageId</strong>, <strong>tileId</strong>, and <strong>widgetId</strong> must be valid UUID v4 format.</span>
-          </li>
-          <li className="flex items-start gap-2 bg-slate-800/60 p-2.5 rounded-lg border border-slate-700">
-            <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-            <span>Every <strong>widgetId</strong> in tiles[].widgetIds must exist in the widgets array.</span>
-          </li>
-          <li className="flex items-start gap-2 bg-slate-800/60 p-2.5 rounded-lg border border-slate-700">
-            <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-            <span>All column spans in a row must add up to 12 without overlapping.</span>
-          </li>
+      <section className="bg-brand-grid rounded-2xl p-5 text-white shadow-raised sm:p-6" aria-labelledby="validation-heading">
+        <h2 id="validation-heading" className="flex items-center gap-2 text-lg font-bold text-white">
+          <FileJson aria-hidden className="size-5 text-aqua-400" />
+          Automatic validation rules
+        </h2>
+        <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+          {VALIDATION_RULES.map((rule, i) => (
+            <li key={i} className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/5 p-4 text-sm leading-relaxed text-teal-100">
+              <CheckCircle2 aria-hidden className="mt-0.5 size-4 shrink-0 text-aqua-400" />
+              <span>{rule}</span>
+            </li>
+          ))}
         </ul>
-      </div>
+      </section>
     </div>
   )
 }
